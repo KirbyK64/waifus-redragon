@@ -125,11 +125,12 @@ async function conversar(browser) {
   await chat.locator('textarea').first().fill(pergunta)
   await chat.locator('textarea').first().press('Enter')
   // A resposta chega aos pedaços: vale o texto depois da pergunta quando ele para de mudar por 3 s.
+  // O rótulo "Respondendo a Mensagem" do botão de responder também está na tela e não é a resposta.
   const t0 = Date.now()
   const depoisDaPergunta = () => chat.evaluate((q) => {
     const texto = document.body.innerText
     const i = texto.lastIndexOf(q)
-    return i < 0 ? '' : texto.slice(i + q.length).replace(/\s+/g, ' ').trim()
+    return i < 0 ? '' : texto.slice(i + q.length).replace(/Respondendo a Mensagem/g, '').replace(/\s+/g, ' ').trim()
   }, pergunta).catch(() => '')
   const inicio = await depoisDaPergunta()
   let ultimo = inicio

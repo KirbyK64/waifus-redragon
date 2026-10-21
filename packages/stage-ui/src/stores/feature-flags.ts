@@ -95,8 +95,12 @@ export const useFeatureFlagsStore = defineStore('feature-flags', () => {
     request?.abort()
     request = new AbortController()
     policies.value = []
-    loading.value = true
     error.value = undefined
+    // NOTICE: the policies only matter for a signed-in AIRI account, and Waifus has no AIRI sign-in.
+    // Without this, every window asked cloud.airi.build on start.
+    if (!auth.user?.id || !auth.token)
+      return
+    loading.value = true
     try {
       const response = await cloudFetch('/v1/feature-flags', {
         signal: AbortSignal.any([request.signal, AbortSignal.timeout(10_000)]),
