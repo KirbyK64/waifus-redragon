@@ -91,7 +91,11 @@ export function redragonCard(character: RedragonCharacter): Card & { extensions:
           // The access code points chat, voice and hearing at the Integraction
           // bridge. Each character speaks with her own ElevenLabs voice there;
           // the bundled pt-BR Kokoro voices stay available in the settings.
-          consciousness: { provider: '', model: '' },
+          // NOTICE: the chat selection lives on the card too. An empty one falls back to the
+          // defaults that the leader window saved at startup, before the activation, and chat
+          // then fails with "No chat provider or model configured". Same ids as the activation
+          // (apps/stage-tamagotchi/src/renderer/composables/use-waifus-activation.ts).
+          consciousness: { provider: 'openai-compatible', model: 'gpt-4.1-mini' },
           speech: { provider: 'elevenlabs', model: 'eleven_flash_v2_5', voice_id: character },
           vision: { provider: '', model: '' },
         },

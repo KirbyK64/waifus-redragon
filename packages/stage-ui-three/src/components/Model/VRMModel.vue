@@ -668,14 +668,16 @@ function buildSceneBootstrap(activeVrm: VRM, cacheHit: boolean): SceneBootstrap 
   box.getSize(modelSize)
   box.getCenter(modelCenter)
   modelHeight.value = modelSize.y
-  modelCenter.y += modelSize.y / 5
 
+  // NOTICE: Waifus Redragon frames the whole body. Upstream shows the upper two thirds, and the
+  // bottom edge of the transparent window then cuts the chibi characters at the waist.
+  // Half the height plus 12% margin fits the vertical field of view, centered on the body.
   const fov = camera.value?.fov ?? 40
   const radians = (fov / 2 * Math.PI) / 180
   const initialCameraOffset = new Vector3(
-    modelSize.x / 16,
-    modelSize.y / 8,
-    -(modelSize.y / 3) / Math.tan(radians),
+    0,
+    modelSize.y / 16,
+    -(modelSize.y * 0.56) / Math.tan(radians),
   )
 
   const eyePositionY = getEyePosition(activeVrm) ?? modelCenter.y
