@@ -3,6 +3,8 @@
 #   alvo=web      versão de navegador (stage-web), artefato dist.zip
 #   alvo=windows  instalador .exe sem assinatura (stage-tamagotchi + electron-builder)
 #   alvo=android  APK de teste assinado com a chave de debug (stage-pocket + Capacitor)
+#   alvo=prova    instala um instalador já publicado num Windows limpo, abre e fotografa (.github/waifus-prova)
+# O alvo windows também roda a prova no instalador que acabou de compilar.
 # iPhone fica fora daqui: vai pelo caminho do Mac da casa (MAC-COTA), com o registro do app na App Store Connect.
 name: waifus
 run-name: waifus ${{ inputs.alvo }}
@@ -11,9 +13,13 @@ on:
   workflow_dispatch:
     inputs:
       alvo:
-        description: web, windows ou android
+        description: web, windows, android ou prova
         required: true
         default: web
+      instalador:
+        description: 'só pro alvo prova: endereço do .exe (vazio = o da versão v0.1.0)'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -83,6 +89,48 @@ jobs:
           path: apps/stage-tamagotchi/dist/*-setup.exe
           if-no-files-found: error
           retention-days: 3
+      - name: Prova no Windows
+        shell: pwsh
+        run: |
+          npm i --no-save --prefix .github/waifus-prova playwright-core@1.56.1
+          $exe = (Get-ChildItem apps/stage-tamagotchi/dist/*-setup.exe | Select-Object -First 1).FullName
+          node .github/waifus-prova/prova.mjs $exe "$env:RUNNER_TEMP\prova"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: waifus-windows-prova
+          path: ${{ runner.temp }}/prova
+          retention-days: 7
+
+  prova:
+    if: inputs.alvo == 'prova'
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: .github/waifus-prova
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Baixar o instalador
+        shell: pwsh
+        env:
+          INSTALADOR: ${{ inputs.instalador }}
+        run: |
+          $url = if ($env:INSTALADOR) { $env:INSTALADOR } else { 'https://github.com/KirbyK64/waifus-redragon/releases/download/v0.1.0/WaifusRedragon-0.1.0-windows-x64-setup.exe' }
+          Invoke-WebRequest -Uri $url -OutFile "$env:RUNNER_TEMP\setup.exe"
+      - name: Prova no Windows
+        shell: pwsh
+        run: |
+          npm i --no-save --prefix .github/waifus-prova playwright-core@1.56.1
+          node .github/waifus-prova/prova.mjs "$env:RUNNER_TEMP\setup.exe" "$env:RUNNER_TEMP\prova"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: waifus-prova
+          path: ${{ runner.temp }}/prova
+          retention-days: 7
 
   android:
     if: inputs.alvo == 'android'
