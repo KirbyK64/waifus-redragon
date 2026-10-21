@@ -230,12 +230,45 @@ async function main() {
   tela('01-area-de-trabalho.png')
 
   const browser = await chromium.connectOverCDP(`http://127.0.0.1:${PORTA}`)
+  // Todo endereço de fora que as janelas pedem daqui pra frente: prova de que o app só fala com a nossa ponte.
+  const destinos = new Map()
+  const vigia = (page) => {
+    if (page.__vigiada)
+      return
+    page.__vigiada = true
+    page.on('request', (r) => {
+      let host = ''
+      try { host = new URL(r.url()).host }
+      catch { return }
+      if (!host || /^(127\.0\.0\.1|localhost)(:|$)/.test(host))
+        return
+      // Na ponte vale o pedido (conversa, voz, ouvido), não só o endereço.
+      const ponte = r.url().match(/\/v1\/([^?]*)/)
+      const chave = host === 'pm.solidpower.com.br' && ponte ? `${host} ${r.method()} ${ponte[1]}` : host
+      destinos.set(chave, (destinos.get(chave) ?? 0) + 1)
+    })
+    // O console do Electron só escreve "[object DOMException]": aqui sai o nome e a mensagem do erro.
+    page.on('console', async (m) => {
+      if (m.type() !== 'error')
+        return
+      const partes = await Promise.all(m.args().map(a => a.evaluate(v => (v instanceof Error || v instanceof DOMException) ? `${v.name}: ${v.message}` : String(v)).catch(() => '?')))
+      nota(`console: ${partes.join(' ').slice(0, 300)}`)
+    })
+  }
+  for (const ctx of browser.contexts()) {
+    ctx.pages().forEach(vigia)
+    ctx.on('page', vigia)
+  }
   if (await ativar(browser).catch((e) => { nota(`ativação: erro ${e.message.split('\n')[0]}`); return false })) {
     await espera(5000)
     tela('12-area-de-trabalho-ativado.png')
     await conversar(browser).catch(e => nota(`conversa: erro ${e.message.split('\n')[0]}`))
     await esquerda(browser).catch(e => nota(`esquerda: erro ${e.message.split('\n')[0]}`))
   }
+
+  for (const ctx of browser.contexts())
+    ctx.pages().forEach(vigia)
+  nota(`endereços de fora pedidos pelas janelas: ${destinos.size ? [...destinos].map(([h, n]) => `${h} (${n})`).join(', ') : 'nenhum'}`)
 
   const alvos = await (await fetch(`http://127.0.0.1:${PORTA}/json/list`)).json()
   for (const a of alvos)

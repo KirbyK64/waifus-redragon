@@ -90,10 +90,11 @@ const languages = computed(() => {
       :description="t('settings.streamer-mode.description')"
     />
 
+    <!-- NOTICE: Waifus Redragon builds without analytics, so the field that promises it does not show. -->
     <FieldCheckbox
+      v-if="showAnalyticsSettings"
       v-model="analyticsToggleValue"
       v-motion
-      :disabled="!showAnalyticsSettings"
       :initial="{ opacity: 0, y: 10 }"
       :enter="{ opacity: 1, y: 0 }"
       :duration="250 + (5 * 10)"

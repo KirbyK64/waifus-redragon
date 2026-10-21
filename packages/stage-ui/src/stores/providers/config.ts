@@ -8,7 +8,7 @@ import { useDebounceFn, useIntervalFn, useLocalStorage } from '@vueuse/core'
 import { isEqual } from 'es-toolkit'
 import { nanoid } from 'nanoid'
 import { defineStore } from 'pinia'
-import { computed, shallowRef, watch } from 'vue'
+import { computed, shallowRef, toRaw, watch } from 'vue'
 
 import { client } from '../../composables/api'
 import { getDefinedProvider } from '../../libs/providers'
@@ -262,9 +262,13 @@ export const useProviderConfigStore = defineStore('provider-config', () => {
     if (!provider)
       return false
 
+    // NOTICE: spread the raw snapshot. Spreading the reactive one copies nested objects (the ElevenLabs
+    // `voiceSettings`) as proxies into the stored config, and the `structuredClone` of the speech output
+    // then throws DataCloneError: the character stays silent until the app restarts.
+    const raw = toRaw(provider)
     providers.value[providerId] = {
-      ...provider,
-      config: { ...provider.config, ...patch },
+      ...raw,
+      config: { ...raw.config, ...patch },
     }
     return true
   }
@@ -281,9 +285,10 @@ export const useProviderConfigStore = defineStore('provider-config', () => {
     if (!provider)
       return
 
+    const raw = toRaw(provider)
     providers.value[providerId] = {
-      ...provider,
-      config: { ...provider.config, model },
+      ...raw,
+      config: { ...raw.config, model },
     }
     schedulePush()
   }
@@ -300,9 +305,10 @@ export const useProviderConfigStore = defineStore('provider-config', () => {
     if (typeof currentModel === 'string' && currentModel.length > 0)
       return
 
+    const raw = toRaw(provider)
     providers.value[providerId] = {
-      ...provider,
-      config: { ...provider.config, model },
+      ...raw,
+      config: { ...raw.config, model },
     }
     schedulePush()
   }
