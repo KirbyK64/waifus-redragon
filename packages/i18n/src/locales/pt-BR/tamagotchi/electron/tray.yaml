@@ -1,0 +1,27 @@
+menu:
+  labels:
+    label:
+      show: Mostrar
+      adjust_sizes: Ajustar tamanho
+      recommended_size: Recomendado (450x600)
+      full_height: Altura total
+      half_height: Meia altura
+      full_screen: Tela cheia
+      align_to: Alinhar em
+      center: Centro
+      top_left: Canto superior esquerdo
+      top_right: Canto superior direito
+      bottom_left: Canto inferior esquerdo
+      bottom_right: Canto inferior direito
+      settings: Configurações...
+      about: Sobre...
+      open_inlay: Abrir janela embutida...
+      open_widgets: Abrir widgets...
+      open_caption: Abrir legenda...
+      close_caption: Fechar legenda...
+      caption_overlay: Legenda sobreposta
+      follow_window: Seguir a janela
+      reset_position: Redefinir posição
+      devtools: DevTools
+      troubleshoot_beatsync: Diagnosticar o BeatSync...
+      quit: Sair

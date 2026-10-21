@@ -1,0 +1,57 @@
+{
+  "conversations": [
+    {
+      "conversation": {
+        "id": "grok-conv-0001",
+        "user_id": "user-0000",
+        "create_time": "2025-08-01T18:00:00.000Z",
+        "modify_time": "2025-08-01T18:10:00.000Z",
+        "title": "Viagem para o Japão",
+        "summary": "",
+        "starred": false
+      },
+      "responses": [
+        {
+          "response": {
+            "_id": "r1",
+            "conversation_id": "grok-conv-0001",
+            "message": "Quero ir ao Japão em abril ver as cerejeiras, já estudo japonês faz um ano.",
+            "sender": "human",
+            "create_time": { "$date": { "$numberLong": "1754071200000" } },
+            "parent_response_id": "",
+            "manual": false,
+            "partial": false,
+            "shared": false,
+            "query": "",
+            "query_type": "",
+            "web_search_results": [],
+            "xpost_ids": [],
+            "xposts": [],
+            "generated_image_urls": [],
+            "image_attachments": [],
+            "file_attachments": [],
+            "card_attachments_json": [],
+            "file_uris": [],
+            "file_attachments_metadata": [],
+            "is_control": false,
+            "steps": [],
+            "media_types": [],
+            "model": "grok-4"
+          }
+        },
+        {
+          "response": {
+            "_id": "r2",
+            "conversation_id": "grok-conv-0001",
+            "message": "Abril é ótimo para o hanami.",
+            "sender": "ASSISTANT",
+            "create_time": { "$date": { "$numberLong": "1754071205000" } },
+            "model": "grok-4"
+          }
+        }
+      ]
+    }
+  ],
+  "projects": [],
+  "tasks": []
+}

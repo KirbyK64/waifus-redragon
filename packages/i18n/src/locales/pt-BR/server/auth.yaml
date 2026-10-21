@@ -1,0 +1,203 @@
+electronCallback:
+  title:
+    loading: Concluindo o login
+    openingAiri: Abrindo o AIRI
+    signedIn: Você entrou
+    signInFailed: Não foi possível entrar
+    finishSignInInAiri: Termine o login no AIRI
+    openAiriToContinue: Abra o AIRI para continuar
+  message:
+    checkingResponse: Conferindo a resposta do login e preparando a volta para o AIRI.
+    passingToAiri: Devolvendo o seu login para o AIRI. Esta página deve fechar em instantes.
+    syncedAndSafeToClose: Avisamos o app do AIRI em que você entrou.
+    invalidResponse: Não foi possível usar esta resposta de login.
+    loopbackUnreachable: O navegador não conseguiu falar com o AIRI pela porta local de retorno.
+    tryOpenDirectly: Vamos tentar abrir a volta local diretamente. Se ainda falhar, use o botão abaixo.
+    automaticHandoffFailed: A volta automática não terminou nesta sessão do navegador.
+  label:
+    signIn: Entrar
+    safeToClose: Já pode fechar esta aba.
+    whyStillHere: Por que esta aba continua aberta?
+  action:
+    openAiriManually: Abrir o AIRI manualmente
+  hint:
+    closeTabManually: Alguns navegadores não deixam esta página se fechar sozinha. Você pode fechá-la manualmente.
+signIn:
+  title: Entrar
+  step:
+    identify:
+      heading: Entrar
+      description: Digite seu e-mail para entrar ou criar uma conta.
+    password:
+      heading: Que bom ver você de novo
+      description: Continuar como {email}.
+    create:
+      heading: Crie sua conta
+      description: Vamos criar uma conta nova para {email}.
+  email:
+    label: E-mail
+    placeholder: voce{'@'}exemplo.com
+  password:
+    label: Senha
+    placeholder: Sua senha
+  newPassword:
+    label: Crie uma senha
+    placeholder: Pelo menos 8 caracteres
+  confirmPassword:
+    label: Confirme a senha
+    placeholder: Repita sua senha
+  name:
+    label: Nome de exibição
+    placeholder: Opcional, por padrão usa o começo do seu e-mail
+  action:
+    continue: Continuar
+    signIn: Entrar
+    createAccount: Criar conta
+    forgotPassword: Esqueceu a senha?
+    useDifferentEmail: Usar outro e-mail
+  divider:
+    or: ou
+  message:
+    redirecting: Redirecionando para {provider}…
+  error:
+    fallback: Não foi possível entrar
+    providerTimeout: O login pelo provedor demorou demais. Tente de novo.
+    unknown: Ocorreu um erro desconhecido
+    socialOnlyNoPassword: Este e-mail foi cadastrado com Google ou GitHub. Entre por um dos botões abaixo; depois de entrar, você pode criar uma senha nas configurações da conta.
+    passwordMismatch: A senha e a confirmação não são iguais.
+    invalidEmail: Digite um endereço de e-mail válido.
+  footer:
+    prefix: Ao continuar, você concorda com os nossos
+    terms: Termos
+    and: e a
+    privacy: Política de Privacidade
+verifyEmail:
+  title:
+    pending: Confira sua caixa de entrada
+    success: E-mail confirmado
+    failed: Não foi possível confirmar
+  message:
+    pending: Enviamos um link de confirmação para o seu e-mail. Abra o link para terminar de criar a conta. Esta página continua sozinha assim que você clicar nele.
+    pendingWithAddress: Enviamos um link de confirmação para {email}. Abra o link para terminar de criar a conta. Esta página continua sozinha assim que você clicar nele.
+    success: Seu e-mail foi confirmado e você entrou. Já pode fechar esta aba.
+    failed: Não foi possível confirmar seu e-mail ({error}). Tente pedir um link novo.
+  action:
+    backToSignIn: Voltar para o login
+forgotPassword:
+  title: Redefina sua senha
+  description: Digite o e-mail da sua conta e enviaremos um link para redefinir a senha.
+  email:
+    label: E-mail
+    placeholder: voce{'@'}exemplo.com
+  action:
+    send: Enviar link de redefinição
+    backToSignIn: Voltar para o login
+  message:
+    sent: Se {email} for de uma conta, o link de redefinição já está a caminho.
+  error:
+    fallback: Não foi possível enviar o e-mail de redefinição.
+deleteAccount:
+  title:
+    success: Conta excluída
+    failed: Não foi possível excluir a conta
+  message:
+    success: Sua conta foi excluída.
+  action:
+    closeTab: Você pode fechar esta aba.
+resetPassword:
+  title:
+    default: Defina uma senha nova
+    success: Senha atualizada
+  password:
+    label: Nova senha
+    placeholder: Pelo menos 8 caracteres
+  confirmPassword:
+    label: Confirme a nova senha
+    placeholder: Repita a nova senha
+  action:
+    reset: Atualizar senha
+    goSignIn: Ir para o login
+  message:
+    success: Sua senha foi atualizada. Entre com a senha nova.
+  error:
+    fallback: Não foi possível atualizar sua senha.
+    missingToken: O link de redefinição é inválido ou expirou.
+    passwordMismatch: A senha e a confirmação não são iguais.
+profile:
+  title: Perfil da conta
+  description: Gerencie seu avatar, nome de exibição e contas conectadas.
+  section:
+    profile: Perfil
+    avatar: Avatar
+    password: Senha
+    linkedAccounts: Contas conectadas
+  field:
+    email: E-mail
+    emailVerified: Situação do e-mail
+    createdAt: Entrou em
+  label:
+    verified: Confirmado
+    unverified: Não confirmado
+  name:
+    label: Nome de exibição
+    placeholder: Como os outros veem você
+  avatar:
+    altText: Avatar do perfil
+    gravatarNotice: Avatar do Gravatar.
+    gravatarLink: Gerenciar em gravatar.com
+  password:
+    currentLabel: Senha atual
+    currentPlaceholder: Digite sua senha atual
+    newLabel: Nova senha
+    newPlaceholder: Pelo menos 8 caracteres
+    confirmLabel: Confirme a nova senha
+    confirmPlaceholder: Repita a nova senha
+    setDescription: Você entrou por uma rede social, então ainda não tem senha. Vamos mandar por e-mail um link seguro para criar uma.
+    setLinkSent: Procure em {email} o link para criar sua senha.
+    setLinkFailed: Não foi possível enviar o link para criar a senha.
+  linkedAccounts:
+    description: Entre no AIRI por estes provedores. Desvincule para tirar o acesso e vincule de novo para trocar de conta.
+    status:
+      linked: Vinculada
+      notLinked: Não vinculada
+      linkedSince: Vinculada em {date}
+    action:
+      link: Vincular
+      unlink: Desvincular
+    message:
+      loading: Carregando contas conectadas...
+      unlinked: '{provider} desconectado.'
+      linkStarted: Redirecionando para {provider}…
+    error:
+      listFailed: Não foi possível carregar as contas conectadas.
+      unlinkFailed: Não foi possível desvincular esta conta.
+      linkFailed: Não foi possível começar a vinculação.
+      lastAccount: Este é o seu único jeito de entrar. Crie uma senha antes de desvincular.
+  action:
+    saveProfile: Salvar alterações
+    changePassword: Trocar senha
+    sendSetPasswordLink: Me mande por e-mail um link para criar a senha
+    signOut: Sair
+  message:
+    loading: Carregando seu perfil...
+    profileSaved: Perfil atualizado.
+    passwordChanged: Senha trocada. As outras sessões foram encerradas.
+  error:
+    loadFailed: Não foi possível carregar seu perfil.
+    saveFailed: Não foi possível salvar suas alterações.
+    changePasswordFailed: Não foi possível trocar sua senha.
+    signOutFailed: Não foi possível sair.
+    passwordMismatch: A nova senha e a confirmação não são iguais.
+    passwordSameAsCurrent: A nova senha precisa ser diferente da atual.
+webCallback:
+  title:
+    signIn: Entrar
+    errorLabel: Deu um erro ao fazer seu login
+    loading: Entrando...
+  message:
+    missingCodeOrState: Falta o código de autorização ou o state
+    missingFlowState: Falta o estado do fluxo OIDC. Tente entrar de novo
+    tokenExchangeFailed: A troca de token falhou
+    finalizing: Finalizando a autenticação com o AIRI.
+  action:
+    tryAgain: Tentar de novo

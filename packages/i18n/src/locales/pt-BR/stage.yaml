@@ -1,0 +1,385 @@
+character-switcher:
+  title: Trocar personagem
+  manage: Gerenciar personagens
+  empty: Nenhuma personagem ainda
+  failed: Não foi possível trocar de personagem. Tente de novo.
+mobile-tools:
+  sign-in: Entrar no AIRI
+  account-description: Conta e preferências
+  sound: Som
+  character-voice: Voz da personagem
+  title: Configurações
+  appearance: Aparência
+  application: Aplicativo
+  more: Mais
+  background: Fundo
+  settings: Configurações
+  about: Sobre
+  view: Visão
+  close-view: Salvar e fechar os controles de visão
+  hearing: Audição
+  menu: Menu
+  menu-unread: Menu, {count} notificações não lidas
+chat:
+  provider-configuration:
+    title: O provedor de conversa não está configurado
+    description: Escolha e valide um provedor nas Configurações antes de mandar uma mensagem.
+    action: Abrir configurações do provedor
+  voice-message:
+    recording: Gravando
+    starting: Ligando o microfone
+    preview: Mensagem de voz gravada
+    transcribing: Transcrevendo…
+    position: Posição da reprodução
+    no-speech: Nenhuma fala foi reconhecida, então a mensagem de voz não foi enviada.
+  voice-composer:
+    audio: Mensagem de voz
+    transcription: Ditado
+    hold-hint: Segure para gravar. Clique para alternar entre mensagem de voz e ditado. Aperte Enter para gravar sem segurar.
+    listening: Ouvindo…
+    lock: Deslize para cima para travar
+    cancel-hint: Deslize para a esquerda para cancelar
+    processing: Finalizando…
+    cancel: Cancelar
+    send: Enviar mensagem de voz
+    insert: Inserir texto
+    retry: Enviar a mensagem de voz de novo
+    discard: Descartar mensagem de voz
+    failed: A entrada de voz falhou
+    configure-title: Configure a Audição
+    configure-description: Escolha um provedor e um modelo de transcrição em Audição para usar o ditado.
+    configure-action: Abrir Audição
+    mode: Entrada de voz
+    auto-send: Enviar quando a gravação parar
+    input-device: Microfone
+    system-default: Padrão do sistema
+    listen: Ouvir o tempo todo
+    push-to-talk: Apertar para falar
+    push-to-talk-unavailable: Este aparelho não tem tecla de Apertar para falar, então o AIRI não está ouvindo. Mude o modo de entrada nas configurações de Audição.
+    wake-word: Ouvir as palavras de ativação
+    hearing-settings: Mais configurações de Audição…
+    options-hint: Passe o mouse ou clique com o botão direito para ver as opções
+    recording: Gravando
+    stop: Parar de gravar
+    stop-send: Parar e enviar
+    play: Ouvir a gravação
+    pause: Pausar
+  voice-preview:
+    processing: Finalizando a transcrição
+    device: Dispositivo de entrada de áudio
+    device-description: Escolha o microfone para esta gravação.
+    device-placeholder: Escolha um microfone
+    level: Nível de entrada
+    activity: Atividade de fala
+    silence: Silêncio
+    speech: Fala
+    threshold: Limite de detecção
+    sensitivity: Sensibilidade
+    sensitivity-description: Ajuste o limite do indicador de fala.
+    start: Começar a gravar
+    stop: Terminar a gravação
+    failed: A operação de áudio falhou.
+  voice-draft:
+    title: Rascunho de voz
+    discard: Descartar rascunho
+    listening: Ouvindo
+    finalizing: Finalizando…
+    sent: Enviado
+  voice-input: Entrada de voz
+  notice:
+    label: 'Relato em segundo plano de {name}'
+  background-tasks:
+    label: Tarefas em segundo plano
+    stop: 'Parar {name}'
+    dismiss: 'Dispensar {name}'
+    status:
+      running: Trabalhando em
+      done: Pronto
+      failed: Não terminou
+      interrupted: Parado
+  judgment:
+    running: 'Avaliando {name}'
+    judged: 'Avaliou {name}'
+    invalid: 'Não foi possível avaliar {name}'
+  judgment-tool-call:
+    answer: Resposta
+    next: Depois
+    reply: Responder normalmente
+    stay-quiet: Ficar quieta
+    hint: 'Responder levando em conta: {text}'
+    recipe-steps: 'Usar a receita {name}'
+    recipe-decision: 'Avaliar {name}'
+    recipe-background: 'Passar para a receita {name}'
+  recipe:
+    using: 'Usando a receita {name}'
+    loaded: 'Usou a receita {name}'
+    started: 'Passou para a receita {name}'
+    pending: 'A receita {name} espera aprovação'
+    disabled: 'A receita {name} está desligada'
+    unknown: 'Receita {name} não encontrada'
+    refused: 'A receita {name} não começou'
+    failed: 'A receita {name} não começou'
+  recipe-tool-call:
+    task: Tarefa
+    usable: Receitas que você pode usar agora
+    pending: Esta receita espera a sua aprovação.
+    disabled: Esta receita está desligada.
+    unknown: Nenhuma receita tem este nome.
+    refused: Não foi possível começar a receita.
+  invoked-skill:
+    steps: 'Usou a receita {name}'
+    background: 'Passou para a receita {name}'
+    decision: 'Usou a receita {name}'
+    question: Pergunta
+    'yes': 'Sim'
+    'no': 'Não'
+  home-assistant-tool-call:
+    shown: 'Mostrando {count} de {total} dispositivos'
+  web-search-tool-call:
+    results: 'Resultados para "{query}" · {count}'
+  tool-calls:
+    running-one: 'Usando {name}'
+    failed-one: "{name} não terminou"
+    combo-running: 'Combo ×{count}'
+    combo: 'Combo de {count} acertos'
+    combo-failed: 'Combo de {count} acertos, {failed} falharam'
+    arguments: Argumentos
+    result: Resultado
+    copy: Copiar dados brutos
+    copied: Copiado
+    raw: Dados brutos
+    other: Outros dados
+    widget: Widget
+    rerun: Rodar de novo
+    card-making: Montando um cartão para esta ferramenta…
+    card-remaking: Montando um cartão novo…
+    card-regenerate: Montar um cartão novo
+    card-failed: Não foi possível montar um cartão para esta ferramenta
+    card-retry: Tentar de novo
+    state:
+      executing: Rodando
+      done: Pronto
+      error: Falhou
+  reply-card:
+    drawing: Desenhando um cartão…
+    raw: Dados brutos
+    card: Cartão
+  error-details:
+    show: Mostrar detalhes
+    hide: Esconder detalhes
+  images:
+    empty: Mande uma ideia ou uma imagem.
+    use-vision: Usar o modelo de visão para imagens da conversa
+    use-vision-description: Escolha um provedor e um modelo abaixo. Ele lê as imagens anexadas antes de o modelo de conversa responder. Sem modelo de visão, as imagens vão direto para o modelo de conversa.
+    attach: 'Anexar imagens'
+    remove: 'Remover {name}'
+    unsupported: 'Use imagens PNG, JPEG, WebP ou GIF.'
+    too-large: 'Cada imagem pode ter no máximo 3 MB.'
+    too-many: 'Anexe até {count} imagens por vez.'
+    total-too-large: 'Todas as imagens anexadas juntas podem ter no máximo 3 MB.'
+    read-failed: 'Não foi possível ler esta imagem. Tente de novo.'
+    no-description: 'O modelo de visão não devolveu descrição da imagem. Confira Configurações → Módulos → Visão e tente de novo.'
+    reading: 'Lendo as imagens…'
+    description: 'Imagem anexada'
+  actions:
+    reply: Responder
+    retry: Tentar de novo
+    send: Enviar mensagem
+    stop: Parar resposta
+  message:
+    character-name:
+      airi: AIRI
+      core-system: Sistema central
+      you: Você
+  reply:
+    cancel: Cancelar resposta
+    message: Mensagem
+    replying-to: Respondendo a {name}
+  reasoning: Raciocínio
+  swipe-demo:
+    show-label: Mostrar rótulos
+    delete: Excluir
+    archive: Arquivar
+    pin: Fixar
+    actions: Mostrar ações
+    row: 'Conversa {n}'
+  sessions:
+    delete-short: Excluir
+    confirm-delete-short: Confirmar exclusão
+    title: Conversas
+    new: Nova conversa
+    current: Atual
+    confirm-delete: Excluir esta conversa e as mensagens dela?
+    cancel: Cancelar
+    empty: Nenhuma conversa ainda
+    cloud-badge: Sincronizada na nuvem
+    new-chat-fallback: Nova conversa
+    delete: Excluir conversa
+avatar-model-missing:
+  title: Nenhum modelo escolhido
+  unavailable-title: Este modelo não está neste aparelho
+  description: Escolha um modelo para mostrar {name} no Palco.
+  select: Escolher modelo
+render-error:
+  title: '{renderer} não conseguiu exibir este modelo'
+  description: O modelo está escolhido, mas o Palco não conseguiu exibi-lo.
+  report-description: |-
+    {renderer} não conseguiu exibir o modelo escolhido.
+    ID do modelo: {modelId}
+    Erro: {error}
+startup:
+  failed: A inicialização falhou
+  failed-resource: Não foi possível carregar {resource}
+  recover: Tente de novo. Se falhar outra vez, abra os detalhes abaixo.
+  recover-model: Tente de novo ou continue sem personagem. Você pode escolher outro modelo depois.
+  details: O que aconteceu?
+  close-details: Fechar detalhes
+  retry: Tentar de novo
+  continue-without-model: Continuar assim mesmo
+  model-timeout: O modelo da personagem demorou demais para carregar. Confira sua conexão e tente de novo.
+  resources:
+    auth: configurações da conta
+    modelIndex: lista de modelos
+    card: configurações da personagem
+    chat: histórico de conversas
+    services: serviços do app
+    modelData: modelos salvos
+    modelSelection: configurações do modelo
+    audio: configurações de áudio
+    route: página
+    model: modelo da personagem
+message: Diga alguma coisa...
+theme:
+  title: Tema
+  system: Sistema
+  light: Claro
+  dark: Escuro
+  switch-to-light: Mudar para o tema claro
+  switch-to-dark: Mudar para o tema escuro
+  switch-to-system: Seguir o tema do sistema
+send-mode:
+  title: Tecla de envio
+  enter: Enter
+  ctrl-enter: Ctrl + Enter
+  double-enter: Enter duas vezes
+speech-output:
+  mute: Silenciar a voz
+  unmute: Tirar a voz do silêncio
+operations:
+  load-models: Carregar modelos
+  load-models-status:
+    loading: Carregando
+    ready: Pronto
+select-a-audio-input: Escolha uma entrada de áudio
+select-a-model: Escolha um modelo
+select-a-voice: Escolha uma voz
+viewers:
+  debug-menu:
+    emotions: Emoções
+    emotions-btn:
+      angry: 😠 Brava
+      awkward: 😳 Sem graça
+      happy: 😄 Feliz
+      neutral: 🙂 Neutra
+      question: 🤔 Dúvida
+      sad: 😫 Triste
+      surprised: 🤯 Surpresa
+      think: 🤨 Pensativa
+    vrm:
+      camera: Câmera
+      model:
+        title: Modelo
+profile-switcher:
+  no-profile: Sem perfil
+  no-profiles: Nenhum perfil ainda
+  save-as-new: Salvar como perfil novo
+  new-profile-name: Nome do perfil
+  manage: Gerenciar perfis
+promo-banner:
+  items:
+    signin:
+      watermark: Lua
+      fallbackLabel: Presente da Lua
+      title: Login de 7 dias
+      eventName: Entre todo dia para ganhar poeira estelar, molduras de avatar e presentes de lançamento.
+      date: 28/03 - 10/04
+      reward: Até 120 de poeira estelar
+      cta: Entrar
+    build:
+      watermark: Obra
+      fallbackLabel: Bônus de obra
+      title: Bônus da caixa de suprimentos
+      eventName: Termine tarefas de construção para ganhar vales bônus e materiais em dobro.
+      date: 30/03 - 12/04
+      reward: 5 vales de suprimentos + materiais de melhoria
+      cta: Ver tarefas
+    spring:
+      watermark: Primavera
+      fallbackLabel: Sorteio de primavera
+      title: Carnaval das cápsulas
+      eventName: Entre no sorteio de primavera para liberar balões, amuletos e móveis temáticos.
+      date: 01/04 - 18/04
+      reward: Primeira tiragem pela metade do preço + amuleto raro
+      cta: Sortear agora
+    coupon:
+      watermark: Papo
+      fallbackLabel: Cupom
+      title: Cupom de recarga
+      eventName: Termine interações na conversa para ganhar cupons de expansão e pacotes de voz.
+      date: 02/04 - 20/04
+      reward: 6 de desconto em 30 / 15 de desconto em 68
+      cta: Pegar cupom
+    home:
+      watermark: Casa
+      fallbackLabel: Tema do quarto
+      title: Atualização do tema de primavera
+      eventName: Libere os temas de janela, escrivaninha e abajur para renovar o seu quarto.
+      date: 05/04 - 22/04
+      reward: Ficha grátis de sorteio de tema ao entrar
+      cta: Ver tema
+waiting: Esperando
+websocket-status:
+  connected: Conectado
+  disconnected: Sem conexão
+  open-settings: Abrir configurações de conexão
+
+computer-use:
+  label: Usar o computador
+  description: Permite que esta janela de conversa veja e controle apps nativos deste computador.
+
+status:
+  preparing: Preparando o microfone
+  listening: Ouvindo
+  paused: Escuta pausada enquanto o AIRI fala
+  transcribing: Transcrevendo
+  hearing-error: Não foi possível transcrever o áudio
+  no-transcript: A fala reconhecida aparece aqui.
+  signing-in: Termine o login no navegador
+  confirming: Confirmando o login
+  signed-in: Você entrou
+  sign-in-error: Não foi possível entrar
+  sign-in-unconfirmed: Não foi possível confirmar sua sessão. Entre de novo.
+  dismiss: Dispensar
+  configure-hearing: Escolha e configure um provedor de Audição nas Configurações.
+
+notifications:
+  title: Notificações
+  open: Abrir notificações
+  open-unread: Abrir notificações, {count} não lidas
+  mark-all-read: Marcar todas como lidas
+  empty: Nenhuma notificação ainda
+  loading: Carregando notificações
+  back: Voltar
+  error: Não foi possível carregar as notificações.
+  retry: Tentar de novo
+  just-now: Agora mesmo
+  kinds:
+    flux-granted:
+      title: Você recebeu {amount} Flux
+    subscription-renewed:
+      title: '{plan} renovado'
+      body: Ativo até {periodEnd}.
+    subscription-payment-failed:
+      title: O pagamento da renovação falhou
+      body: Vamos tentar de novo em {retryAt}. Atualize sua forma de pagamento para manter o {plan}.
+      body-no-retry: Atualize sua forma de pagamento para manter o {plan}.

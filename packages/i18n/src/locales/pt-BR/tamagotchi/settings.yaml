@@ -1,0 +1,558 @@
+allow-visible-on-all-workspaces:
+  title: Visível em todas as áreas de trabalho
+  description: Deixa a janela visível em todas as áreas de trabalho (só no macOS).
+microphone-permission:
+  prompt:
+    title: Permitir acesso ao microfone?
+    description: O AIRI usa o microfone para entrada de voz e transcrição. Esta escolha vale até você redefini-la nas Configurações.
+    allow: Permitir
+    deny: Negar
+  states:
+    not-determined: Não definido
+    granted: Permitido
+    denied: Negado
+  settings:
+    title: Microfone
+    description: Controle se o AIRI pode usar o microfone. Redefinir esta escolha para o microfone agora e pergunta de novo na próxima vez.
+    revoke: Tirar o acesso
+    reset: Redefinir escolha
+spotlight:
+  errors:
+    unknown: Erro desconhecido
+    prefix: 'Algo deu errado: {message}'
+    shortcutRegistrationFailed: 'Algo deu errado: não foi possível registrar o atalho do Spotlight.'
+pages:
+  modules:
+    mcp-server:
+      description: Conecte e gerencie servidores e ferramentas MCP
+      title: Servidor MCP
+  system:
+    general:
+      hide-app-icon:
+        title: Esconder o ícone da barra de tarefas / Dock
+        description: Deixa o AIRI só na bandeja. Use o menu da bandeja para abrir janelas ou sair. As mudanças valem na hora.
+        load-error: Não foi possível carregar a configuração do ícone do app.
+        save-error: Não foi possível atualizar a configuração do ícone do app.
+    sections:
+      section:
+        window-shortcuts:
+          title: Atalhos de teclado
+    window-shortcuts:
+      description: Altere os atalhos da janela.
+      title: Atalhos da janela
+      empty: Não definido
+      spotlight:
+        title: Atalho do Spotlight
+        description: Clique no atalho e aperte o atalho novo. Aperte Esc para cancelar.
+      push-to-talk:
+        title: Atalho de apertar para falar
+        description: Segure este atalho em qualquer app enquanto fala com o AIRI. Clique no atalho e aperte o atalho novo. Aperte Esc para cancelar.
+        inactive: Este atalho só funciona quando o modo de entrada da Audição é Apertar para falar e o microfone está ligado.
+      actions:
+        recording: Aperte as teclas
+        reset: Redefinir
+      errors:
+        load: Não foi possível carregar o atalho
+        conflict: Este atalho já está em uso.
+        failed: Não foi possível atualizar o atalho
+        requiresModifier: Use pelo menos uma destas teclas, Cmd, Ctrl, Alt ou Super.
+        requiresHoldModifier: Use Cmd, Ctrl, Alt ou Super, ou uma tecla de função como F13. Só o Shift não basta.
+        denied: O AIRI não consegue ler teclas globais. Permita o AIRI nas configurações de Acessibilidade e tente de novo.
+        unsupported: Este sistema não consegue detectar quando você solta um atalho global.
+      toggle-move:
+        label: Ligar ou desligar mover
+      toggle-resize:
+        label: Ligar ou desligar redimensionar
+      toggle-ignore-mouse-event:
+        label: Ligar ou desligar ignorar o mouse
+      press-keys: Aperte as teclas...
+    developer:
+      sections:
+        section:
+          use-window-mouse:
+            title: Ferramenta useWindowMouse
+            description: Testa a posição do cursor na janela do Electron
+devtools:
+  title: Desenvolvedor
+  pages:
+    context-flow:
+      title: Fluxo de contexto
+    presence-bubble:
+      title: Balão de presença
+      description: Controle o balão acima da personagem e acompanhe na janela principal
+      override:
+        title: Controlar o balão daqui
+        description: Com isto desligado, o palco não mostra balão a não ser durante uma rodada de conversa.
+      thinking:
+        title: Pensando
+        description: Mostra os pontinhos. Tem prioridade sobre a contagem de não lidas.
+      unread:
+        title: Mensagens não lidas
+        description: Aparece como um painel na cabeça, com uma marca e a contagem.
+      main-window-note: As mudanças aparecem na janela principal do AIRI.
+    live2d-ambient-light:
+      title: Luz ambiente do Live2D
+      description: Ajuste a amostragem da tela e o shader de luz colorida do Live2D
+      controls:
+        title: Fonte de luz e saída
+      enabled:
+        title: Luz ambiente
+        description: Aplica o filtro de luz ambiente no modelo Live2D ativo.
+      source:
+        title: Fonte de luz
+        options:
+          screen-capture: Captura da tela
+          forced-color: Cor forçada
+      mode:
+        title: Modo de iluminação
+        options:
+          window-gradient: Degradê da janela
+          global: Ambiente global
+      forced-color:
+        title: Cor de teste
+        description: Aplica esta cor sem capturar a tela.
+      strength:
+        title: Força da luz
+        description: Define a intensidade geral do efeito. 1 é o visual planejado, e até 3 deixa o contorno de luz e a contraluz mais fortes.
+      squint:
+        title: Apertar os olhos com mudança forte de brilho
+        description: Fecha um pouco os olhos quando a tela clareia mais rápido do que a personagem se acostumou. Tela que fica clara deixa os olhos abertos. 0 desliga isto.
+      main-window-note: As mudanças aparecem na janela principal do AIRI.
+      diagnostics:
+        title: Diagnóstico da captura
+        waiting: Esperando o diagnóstico da janela principal do AIRI.
+        status:
+          disabled: Desligado
+          starting: Iniciando
+          capturing: Capturando
+          forced-color: Cor forçada
+          error: Erro
+        capture:
+          title: Estado da captura
+          description: Confira o monitor escolhido, o tamanho da captura e as coordenadas excluídas.
+          display: Monitor e limites
+          video-size: Vídeo de origem
+          sample-size: Quadro de amostra
+          window-bounds: Limites da janela do AIRI
+          excluded-region: Região excluída
+          exposure: Exposição da tela
+          behind-luminance: Luz atrás da personagem
+          updated: Última atualização
+        preview:
+          title: Captura reduzida
+          description: O retângulo vermelho marca a janela do AIRI. O retângulo tracejado marca a área que os mapas de luz cobrem.
+          unavailable: Nenhum quadro capturado disponível.
+        pixels:
+          title: Decisões por pixel
+          total: Total
+          accepted: Aceitos
+          excluded: Pintados
+          transparent: Transparentes
+          see-through: Vazados
+        maps:
+          title: Mapas de luz
+          window: Cada mapa cobre a janela do AIRI e meia janela em cada lado. O contorno marca a janela.
+          unavailable: Nenhum ambiente disponível.
+          target: Medido
+          applied: Aplicado depois da suavização
+          surround:
+            title: Mapa do entorno
+            description: Desfoque largo da tela em volta e atrás da janela. Leva a cor da luz e o lado de onde ela vem.
+          contact:
+            title: Mapa de contato
+            description: Desfoque estreito do mesmo conteúdo. Este mapa comanda o contorno de luz e a borda da contraluz.
+      sampling:
+        title: Amostragem da tela
+        capture-interval:
+          title: Intervalo de captura
+          description: Define o tempo entre as amostras da tela. A captura roda nesse ritmo.
+        response-time:
+          title: Tempo de resposta
+          description: Define a rapidez com que as cores amostradas acompanham uma mudança na tela.
+        sample-width:
+          title: Tamanho da amostra
+          description: Define a largura do quadro reduzido. Um quadro mais largo põe mais detalhe nos mapas de luz. A altura acompanha o seu monitor.
+        neutral-color-weight:
+          title: Peso das cores neutras
+          description: Define o peso mínimo das cores pouco saturadas. Conteúdo colorido conta mais que cinza.
+      shader:
+        title: Resposta do shader
+        dark-base:
+          title: Brilho mínimo
+          description: Define o brilho do modelo sobre uma tela preta. Uma tela branca mostra o modelo como foi desenhado, e uma tela mais escura escurece ele até esse mínimo.
+        base-curve:
+          title: Curva de brilho
+          description: Define como o brilho do modelo sobe entre o mínimo e a arte. Acima de 1, uma tela meio iluminada deixa o modelo mais perto do mínimo.
+        local-share:
+          title: Parte da luz local
+          description: Define quanto do brilho do modelo segue a luz ao lado dele, e não a tela inteira. Em 0, o modelo fica com o mesmo brilho em qualquer lugar da tela.
+        tint:
+          title: Tingimento
+          description: Define quanto da cor da tela o modelo pega. Em 0, só o brilho da tela chega ao modelo.
+        color-boost:
+          title: Reforço de cor na luz fraca
+          description: Define quanta cor extra o modelo pega de luz fraca mas saturada. O brilho fica onde a luz deixou, e nenhum canal fica abaixo do modelo sem luz.
+        wrap-intensity:
+          title: Intensidade do contorno de luz
+          description: Define o quanto a cor do fundo vaza na borda do modelo.
+        wrap-saturation:
+          title: Saturação do contorno de luz
+          description: Define quanto da cor da tela o contorno de luz mantém. 0 soma luz branca do mesmo brilho. 1 soma a cor inteira da tela.
+        backlight:
+          title: Contraluz
+          description: Define a força com que a luz de trás da personagem acende a borda fina em todo o contorno.
+        wrap-diffuse:
+          title: Largura do contorno de luz
+          description: Define até onde a cor do fundo entra pela borda do modelo.
+        translucent-wrap:
+          title: Menos contorno em partes translúcidas
+          description: Multiplica o contorno de luz e a borda pelo quadrado do alfa do modelo. Partes desenhadas com alfa parcial já mostram a área de trabalho através delas.
+      preview-shader:
+        title: Prévia do shader
+        description: Roda o shader de verdade sobre um cartão de teste, com o ambiente ao vivo e as configurações acima.
+        window-mapping: O filtro trata esta tela como a janela inteira do palco, então a prévia não é uma cópia exata do palco pixel a pixel.
+        filtered: Saída do shader
+        unavailable: A prévia precisa de WebGL, e esta janela não conseguiu criar um contexto.
+        environment:
+          live: A luz vem do último retrato que a janela principal do AIRI publicou.
+          neutral: Nenhum retrato chegou ainda, então a prévia usa o ambiente neutro.
+        regions:
+          title: Regiões do cartão de teste
+          body: O corpo largo tem uma rampa de tons de sRGB {low} até {high}. Brilho, contraste, croma e folga aparecem ao longo dela.
+          bars: As barras têm {first}, {second}, {third}, {fourth} e {fifth} pixels de largura. Mostram até onde o contorno de luz entra numa forma fina.
+          patches: Os dois quadrados são desenhados com alfa {strong} e {weak}, que é onde a opção de contorno translúcido age.
+    editor:
+      title: Editor do AIRI
+      description: Abre a janela separada do Editor do AIRI
+      button: Abrir editor
+    lag-visualizer:
+      title: Visualizador de atraso
+    live2d-motion:
+      title: Controle de movimento do Live2D
+      description: Controle os olhos, a cabeça e o corpo do Live2D.
+      actions:
+        back: Voltar
+      system-audio:
+        title: Sincronia labial com o áudio do sistema
+        description: Captura o áudio de outros players. A mesma entrada comanda o Beat Sync e a boca do Live2D.
+        signal: Sinal de entrada
+        mouth-open: Boca aberta
+        input-volume-threshold: Limite de volume de entrada
+        random-close-delay: Atraso aleatório para fechar
+        random-close-probability: Chance aleatória de fechar
+        actions:
+          start: Iniciar entrada
+          stop: Parar entrada
+      panels:
+        direct-control: Controle direto
+        preview: Prévia do modelo
+        timeline: Linha do tempo
+        inference: Inferência do modelo
+      preview:
+        groups:
+          expression: Expressão
+          offset: Deslocamento da posição
+        values:
+          squint: Olhos apertados
+          mouth-form: Formato
+          mouth-open: Abertura
+      joystick-label: Joystick de movimento do Live2D
+      wave:
+        toggle: Modo barquinho
+      instructions: Arraste o joystick ou use as setas para X/Y. R aperta um pouco os olhos. F aperta mais. C fecha os olhos. W/S muda o formato da boca. Espaço abre a boca. A/D move o corpo no eixo X. Q/E inclina a cabeça. Ao soltar as teclas, tudo volta suave para o centro.
+      parameter-note: O joystick controla X/Y. R equivale a 1/3 de olhos apertados. F equivale a 2/3. C equivale a olhos totalmente fechados. W/S equivale a formato da boca ±1. Espaço equivale a boca aberta 1. A/D equivale a corpo X ±10°. Q/E equivale a cabeça Z ±30°.
+      input:
+        keyboard: Teclado
+        controller: Controle
+      input-actions:
+        move-body-head: Mover corpo e cabeça
+        tilt-head: Inclinar a cabeça
+        blink: Piscar
+        open-mouth: Abrir a boca
+        mouth-shape: Mudar o formato da boca
+      eye-view:
+        title: Olhar travado
+        description: Escolha um alvo. Os olhos compensam o movimento da cabeça para continuar olhando para ele.
+        pad-label: Alvo do olhar travado
+        actions:
+          enable: Ligar fixação
+          disable: Desligar fixação
+          center: Centralizar alvo
+        counter:
+          label: Força da compensação da cabeça
+          description: O quanto os olhos compensam o movimento X/Y da cabeça.
+        values:
+          target: Alvo
+          output: Saída dos olhos
+      editor:
+        title: Editor de movimento
+        instructions: A curva cinza é a origem. Adicione camadas de movimento ou quadros-chave do alvo do olhar. Escolha uma faixa e arraste os pontos dela.
+        play: Tocar linha do tempo
+        pause: Pausar linha do tempo
+        undo: Desfazer
+        redo: Refazer
+        crop-to-view: Cortar no que está à vista
+        reset-view: Redefinir visão
+        export-project: Exportar projeto
+        import-project: Importar projeto
+        import-error: Este arquivo não é um projeto de movimento Live2D do AIRI válido.
+        playback:
+          label: Controles da linha do tempo
+          start: Ir para o início
+          step-backward: Voltar um passo
+          step-forward: Avançar um passo
+          end: Ir para o fim
+          timecode: Tempo atual e total
+        input-actions:
+          play: Tocar
+          stop: Parar
+          start: Ir para o início
+          end: Ir para o fim
+          step-backward: Voltar um passo
+          step-forward: Avançar um passo
+          restart-recording: Gravar de novo
+          clear-timeline: Limpar linha do tempo
+          previous-track: Escolher a faixa anterior
+          next-track: Escolher a próxima faixa
+        timeline-label: Linha do tempo do movimento
+        timeline-help: Arraste a régua para percorrer. Use a roda do mouse para zoom. Segure Shift e arraste para deslocar. Clique duas vezes numa curva escolhida para adicionar um ponto. Cada chave do alvo do olhar vale até a próxima chave.
+        overlay-count: '{count} camadas'
+        controls:
+          add: Adicionar
+          replace: Substituir
+          create-keyframes: Criar quadros-chave
+          weight: Peso
+          remove: Remover
+        tracks:
+          viewTargetX: Alvo do olhar X
+          viewTargetY: Alvo do olhar Y
+          eyeX: Olho X
+          eyeY: Olho Y
+          eyeOpen: Olho aberto
+          headX: Cabeça X
+          headY: Cabeça Y
+          headZ: Cabeça Z
+          bodyX: Corpo X
+          bodyY: Corpo Y
+          bodyZ: Corpo Z
+          mouthForm: Formato da boca
+          mouthOpen: Boca aberta
+      var:
+        title: Gerador de movimento ocioso VAR
+        description: Ajusta um movimento gravado e gera uma nova sequência ociosa.
+        actions:
+          fit: Ajustar o movimento atual
+          refit: Ajustar de novo o movimento atual
+          generate: Gerar movimento
+          stop: Parar geração
+          new-seed: Nova semente
+        order:
+          label: Ordem do VAR
+          description: Quadros anteriores usados em cada previsão.
+        residual:
+          label: Força do resíduo
+          description: Variação gerada. Zero é determinístico.
+        diagnostics:
+          source: Origem
+          model: Modelo
+          fit: Ajuste
+          run: Execução gerada
+        status:
+          no-source: Importe ou grave um movimento antes
+          source-ready: '{count} amostras · {duration}s'
+          fit-failed: O ajuste do VAR falhou.
+        values:
+          frames: '{count} quadros'
+          model: '{channels} canais · {features} termos'
+          fit: '{frames} quadros · RMSE {error} · {duration}ms'
+          run: 'semente {seed} · {duration}'
+      ar-hmm:
+        title: Gerador de movimento ocioso AR-HMM
+        description: Aprende estados de movimento e transições para variar o movimento ocioso.
+        actions:
+          fit: Ajustar movimento
+          refit: Ajustar de novo
+          generate: Gerar
+          stop: Parar
+          new-seed: Nova semente
+        states:
+          label: Estados ocultos
+          description: Padrões de movimento que o modelo pode aprender.
+        order:
+          label: Ordem do AR
+          description: Quadros anteriores usados em cada estado.
+        residual:
+          label: Força da inovação
+          description: Variação dentro de cada estado.
+        diagnostics:
+          source: Origem
+          model: Modelo
+          fit: Ajuste
+          states: Ocupação dos estados
+          run: Execução gerada
+        status:
+          no-source: Importe ou grave um movimento antes
+          source-ready: '{count} amostras · {duration}s'
+          fit-failed: O ajuste do AR-HMM falhou.
+        values:
+          count: '{count} estados'
+          frames: '{count} quadros'
+          model: '{states} estados · {channels} canais · {features} termos'
+          fit: 'log p/quadro {likelihood} · {duration}ms'
+          states: '{occupancy} · permanência {dwell}s'
+          run: 'estado {state} · semente {seed} · {duration}'
+      output-filter:
+        title: Filtro da saída do gerador
+        description: Suaviza a saída do gerador e segura mudanças pequenas antes de a mola receber cada pose.
+        actions:
+          enable: Ligar filtro
+          disable: Desligar filtro
+          reset: Redefinir estado
+        smoothing:
+          label: Suavização EMA
+          description: Mistura cada alvo aceito com a saída anterior. Valores maiores tiram mais tremida, mas atrasam mais.
+        cutoff:
+          label: Corte de mudança
+          description: Segura um canal até a mudança normalizada acumulada chegar a este valor.
+        diagnostics:
+          status: Situação
+          input-change: MAE da mudança bruta
+          output-change: MAE da mudança filtrada
+          cutoff-tracks: Canais segurados
+        status:
+          waiting: Esperando um gerador
+          filtering: Filtrando a saída do gerador
+          bypassed: Passando a saída bruta do gerador
+      breath:
+        title: Respiração manual
+        description: Controla o ParamBreath com tempos ajustáveis de inspirar, expirar e pausa, sem pôr dados de respiração nas gravações.
+        actions:
+          enable: Ligar respiração
+          disable: Desligar respiração
+          reset: Reiniciar ciclo
+        cycle:
+          label: Duração da respiração
+          description: Define o tempo de uma inspiração e uma expiração, antes da pausa com o ar solto.
+        inhale:
+          label: Parte da inspiração
+          description: Define a parte da duração usada para inspirar. O tempo que sobra é a expiração.
+        dwell:
+          label: Pausa depois de expirar
+          description: Segura o ParamBreath no mínimo antes da próxima inspiração.
+        minimum:
+          label: Mínimo
+          description: Define o menor valor gravado no ParamBreath.
+        maximum:
+          label: Máximo
+          description: Define o maior valor gravado no ParamBreath.
+        diagnostics:
+          stage: Etapa
+          phase: Progresso do ciclo
+          output: Saída do ParamBreath
+        stage:
+          inhale: Inspirar
+          exhale: Expirar
+          dwell: Pausa depois de expirar
+      spring:
+        follow:
+          label: Acompanhar
+          description: A rapidez com que o movimento acompanha o joystick.
+        inertia:
+          label: Inércia
+          description: Quanto embalo o movimento mantém.
+      groups:
+        eyes: Olhos
+        head: Cabeça
+        body: Corpo
+      recording:
+        actions:
+          record: Gravar
+          stop-recording: Parar gravação
+          play: Tocar
+          stop-playback: Parar reprodução
+          export: Exportar
+          import: Importar
+        status:
+          empty: Nenhuma gravação de movimento
+          recording: Gravando movimento
+          playing: Tocando movimento
+          ready: '{count} amostras · {duration}'
+        import-error: Este arquivo não é uma gravação de movimento Live2D do AIRI válida.
+    performance-visualizer:
+      title: Visualizador de desempenho
+      description: Confira métricas de desempenho ao vivo e diagnósticos de execução
+      resource-events:
+        title: Eventos de recursos recentes
+        description: O evento mais novo vem primeiro. O tempo é em milissegundos desde que o renderizador de origem começou.
+        empty: Nenhum evento de recurso registrado. Carregue ou troque um modelo VRM com o rastreamento ligado.
+        columns:
+          time: Tempo (ms)
+          phase: Fase
+          reason: Motivo
+          textures: Texturas
+          geometries: Geometrias
+          meshes: Malhas
+          materials: Materiais
+      controls:
+        enable-all:
+          label: Ligar todas as métricas disponíveis
+          description: Liga cada métrica que este navegador suporta.
+        start-recording: Começar a gravar
+        stop-recording: Parar a gravação ({seconds}s)
+        export-last-recording: Exportar a última gravação
+      metrics:
+        fps:
+          label: FPS
+          description: Taxa de quadros da animação nos últimos 10 segundos. Cada amostra é 1000 dividido pelo intervalo entre quadros em milissegundos.
+        frame-duration:
+          label: Tempo de quadro (ms)
+          description: Tempo entre os quadros da animação nos últimos 10 segundos.
+        long-task:
+          label: Tarefas longas
+          description: Tarefas da thread principal que levam pelo menos 50 ms.
+          unsupported: Este navegador não mostra o tempo das tarefas longas.
+        memory:
+          label: Heap do JS (MB)
+          description: Uso do heap do JavaScript pela API performance.memory do Chromium.
+          unsupported: Este navegador não mostra o uso do heap do JavaScript.
+      recording:
+        title: Última gravação
+        duration: Duração {duration} ms
+        limit: A gravação para depois de 60 segundos.
+      history:
+        title: Histórico de FPS
+        latest: Último
+        minimum: Mín
+        maximum: Máx
+        seconds-ago: '-{seconds} s'
+        end: 0 s
+        empty: Nenhuma amostra de FPS. Ligue o FPS para coletar amostras.
+      overlay:
+        title: Desempenho
+        move: Mover o painel de desempenho
+        reset-position: Redefinir a posição do painel
+        record: Gravar
+        stop: Parar
+        export: Exportar a última gravação
+        average: média
+    markdown-stress:
+      title: Teste de carga de Markdown
+      description: Força o processamento e a exibição de Markdown com mensagens pesadas de conversa
+    io-tracer:
+      title: Rastreador de IO
+      recording:
+        title: Gravar rastros de IO automaticamente
+        description: Salva os trechos de IO encerrados como JSON Lines na pasta de dados do app, para agentes de código analisarem. Arquivos com mais de sete dias são apagados.
+    widgets-calling:
+      title: Chamada de widgets
+
+screen-capture:
+  permissions-prompt:
+    title: Captura de tela
+    description: Para capturar telas ou janelas, é preciso permissão de gravação da tela e do áudio do sistema.
+    open-preferences: Abrir Ajustes do Sistema
+    dismiss: Dispensar
+    instructions:
+      step-1: Abra os "Ajustes do Sistema" e escolha "Privacidade e Segurança" na barra lateral.
+      step-2: Nas seções "Gravação de Tela e Áudio do Sistema" e "Somente Gravação de Áudio do Sistema", ligue as chaves do AIRI.
+      step-2-note: Se o AIRI não aparecer na lista, adicione manualmente pelo botão "+" e escolha o AIRI na pasta Aplicativos.

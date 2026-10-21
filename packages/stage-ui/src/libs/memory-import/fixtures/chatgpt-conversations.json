@@ -1,0 +1,181 @@
+[
+  {
+    "title": "Treino de jiu-jitsu",
+    "create_time": 1726063200.512,
+    "update_time": 1726066800.104,
+    "mapping": {
+      "root": { "id": "root", "message": null, "parent": null, "children": ["sys"] },
+      "sys": {
+        "id": "sys",
+        "message": {
+          "id": "sys",
+          "author": { "role": "system", "name": null, "metadata": {} },
+          "create_time": null,
+          "content": { "content_type": "text", "parts": [""] },
+          "status": "finished_successfully",
+          "metadata": { "is_visually_hidden_from_conversation": true },
+          "recipient": "all"
+        },
+        "parent": "root",
+        "children": ["ctx"]
+      },
+      "ctx": {
+        "id": "ctx",
+        "message": {
+          "id": "ctx",
+          "author": { "role": "user", "name": null, "metadata": {} },
+          "create_time": null,
+          "content": {
+            "content_type": "user_editable_context",
+            "user_profile": "The user provided the following information about themselves: Sou designer de jogos em Porto Alegre.",
+            "user_instructions": "The user provided the additional info about how they would like you to respond: Responda curto."
+          },
+          "status": "finished_successfully",
+          "metadata": { "is_visually_hidden_from_conversation": true, "user_context_message_data": { "about_user_message": "Sou designer de jogos em Porto Alegre." } },
+          "recipient": "all"
+        },
+        "parent": "sys",
+        "children": ["u1"]
+      },
+      "u1": {
+        "id": "u1",
+        "message": {
+          "id": "u1",
+          "author": { "role": "user", "name": null, "metadata": {} },
+          "create_time": 1726063201.1,
+          "content": { "content_type": "text", "parts": ["Treino jiu-jitsu três vezes por semana, me ajuda a montar um aquecimento?"] },
+          "status": "finished_successfully",
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "ctx",
+        "children": ["a1-old", "a1"]
+      },
+      "a1-old": {
+        "id": "a1-old",
+        "message": {
+          "id": "a1-old",
+          "author": { "role": "assistant", "name": null, "metadata": {} },
+          "create_time": 1726063210.0,
+          "content": { "content_type": "text", "parts": ["Versão descartada."] },
+          "status": "finished_successfully",
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "u1",
+        "children": ["u2-draft"]
+      },
+      "u2-draft": {
+        "id": "u2-draft",
+        "message": {
+          "id": "u2-draft",
+          "author": { "role": "user", "name": null, "metadata": {} },
+          "create_time": 1726063220.0,
+          "content": { "content_type": "text", "parts": ["Rascunho editado que não ficou na tela."] },
+          "status": "finished_successfully",
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "a1-old",
+        "children": []
+      },
+      "a1": {
+        "id": "a1",
+        "message": {
+          "id": "a1",
+          "author": { "role": "assistant", "name": null, "metadata": {} },
+          "create_time": 1726063230.0,
+          "content": { "content_type": "text", "parts": ["Claro! Comece com mobilidade de quadril."] },
+          "status": "finished_successfully",
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "u1",
+        "children": ["u2"]
+      },
+      "u2": {
+        "id": "u2",
+        "message": {
+          "id": "u2",
+          "author": { "role": "user", "name": null, "metadata": {} },
+          "create_time": 1726063300.0,
+          "content": {
+            "content_type": "multimodal_text",
+            "parts": [
+              { "content_type": "image_asset_pointer", "asset_pointer": "file-service://file-abc", "size_bytes": 1024, "width": 512, "height": 512 },
+              "Essa é a minha faixa, sou faixa azul."
+            ]
+          },
+          "status": "finished_successfully",
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "a1",
+        "children": ["t1"]
+      },
+      "t1": {
+        "id": "t1",
+        "message": {
+          "id": "t1",
+          "author": { "role": "tool", "name": "python", "metadata": {} },
+          "create_time": 1726063310.0,
+          "content": { "content_type": "execution_output", "text": "ok" },
+          "status": "finished_successfully",
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "u2",
+        "children": []
+      }
+    },
+    "moderation_results": [],
+    "current_node": "t1",
+    "plugin_ids": null,
+    "conversation_id": "66e1a2b0-0000-4000-8000-000000000001",
+    "conversation_template_id": null,
+    "gizmo_id": null,
+    "is_archived": false,
+    "safe_urls": [],
+    "default_model_slug": "gpt-4o",
+    "id": "66e1a2b0-0000-4000-8000-000000000001"
+  },
+  {
+    "title": "Receita de pão",
+    "create_time": 1704106800,
+    "update_time": 1704107000,
+    "mapping": {
+      "n0": { "id": "n0", "message": null, "parent": null, "children": ["n1"] },
+      "n1": {
+        "id": "n1",
+        "message": {
+          "id": "n1",
+          "author": { "role": "user", "name": null, "metadata": {} },
+          "create_time": 1704106801,
+          "content": { "content_type": "user_editable_context", "user_profile": "The user provided the following information about themselves: Sou designer de jogos em Porto Alegre.", "user_instructions": "" },
+          "status": "finished_successfully",
+          "metadata": { "is_visually_hidden_from_conversation": true },
+          "recipient": "all"
+        },
+        "parent": "n0",
+        "children": ["n2"]
+      },
+      "n2": {
+        "id": "n2",
+        "message": {
+          "id": "n2",
+          "author": { "role": "user", "name": null, "metadata": {} },
+          "create_time": 1704106802,
+          "content": { "content_type": "text", "parts": ["Faço pão de fermentação natural todo domingo."] },
+          "status": "finished_successfully",
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "n1",
+        "children": []
+      }
+    },
+    "moderation_results": [],
+    "conversation_id": "659c1e70-0000-4000-8000-000000000002",
+    "id": "659c1e70-0000-4000-8000-000000000002"
+  }
+]

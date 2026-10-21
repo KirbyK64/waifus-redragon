@@ -1,0 +1,35 @@
+[
+  {
+    "header": "Gemini Apps",
+    "title": "Prompted quais teclados mecânicos são bons para quem digita muito?",
+    "time": "2025-06-10T22:15:03.120Z",
+    "products": ["Gemini Apps"],
+    "activityControls": ["Gemini Apps Activity"],
+    "safeHtmlItem": [{ "html": "<p>Resposta do modelo que não deve entrar.</p>" }]
+  },
+  {
+    "header": "Gemini Apps",
+    "title": "Prompted sou fã de switches lineares, qual escolher?",
+    "time": "2025-06-10T22:20:44.000Z",
+    "products": ["Gemini Apps"],
+    "activityControls": ["Gemini Apps Activity"]
+  },
+  {
+    "header": "Gemini Apps",
+    "title": "Gave feedback: Good response",
+    "time": "2025-06-10T22:21:00.000Z",
+    "products": ["Gemini Apps"]
+  },
+  {
+    "header": "Apps do Gemini",
+    "title": "Enviou o comando me lembra de regar as plantas toda sexta",
+    "time": "2025-06-12T08:00:00.000Z",
+    "products": ["Apps do Gemini"]
+  },
+  {
+    "header": "Search",
+    "title": "Searched for previsão do tempo",
+    "time": "2025-06-12T08:05:00.000Z",
+    "products": ["Search"]
+  }
+]
