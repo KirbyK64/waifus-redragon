@@ -22,17 +22,17 @@ function tela(nome) {
   catch (e) { nota(`foto ${nome} falhou: ${e.message}`) }
 }
 
-function acha(dir, fundo = 0) {
-  if (!dir || !existsSync(dir) || fundo > 3)
-    return null
-  for (const d of readdirSync(dir, { withFileTypes: true })) {
-    const p = join(dir, d.name)
-    if (d.isFile() && d.name === NOME)
-      return p
-    if (d.isDirectory()) {
-      const r = acha(p, fundo + 1)
-      if (r)
-        return r
+/** O instalador põe o app numa pasta com o nome dele: na do usuário (por pessoa) ou em Arquivos de Programas (calado como admin). */
+function acha() {
+  const pastas = [process.env.LOCALAPPDATA && join(process.env.LOCALAPPDATA, 'Programs'), process.env.ProgramFiles, process.env['ProgramFiles(x86)']]
+  for (const raiz of pastas.filter(Boolean)) {
+    let nomes = []
+    try { nomes = readdirSync(raiz) }
+    catch { continue }
+    for (const n of nomes.filter(n => /waifus/i.test(n))) {
+      const p = join(raiz, n, NOME)
+      if (existsSync(p))
+        return p
     }
   }
   return null
@@ -46,12 +46,12 @@ async function main() {
   nota(`instalador /S: saiu com ${inst.status} em ${Math.round((Date.now() - t0) / 1000)} s`)
   spawnSync('taskkill', ['/IM', NOME, '/F'], { stdio: 'ignore' })
 
-  const exe = acha(join(process.env.LOCALAPPDATA, 'Programs')) ?? acha(process.env.ProgramFiles)
+  const exe = acha()
   if (!exe)
     throw new Error(`não achei ${NOME} depois de instalar`)
   nota(`instalado em: ${exe}`)
-  const atalho = join(process.env.USERPROFILE, 'Desktop', 'Waifus Redragon.lnk')
-  nota(`atalho na área de trabalho: ${existsSync(atalho) ? 'sim' : 'não'}`)
+  const atalhos = [join(process.env.USERPROFILE, 'Desktop'), join(process.env.PUBLIC ?? 'C:\\Users\\Public', 'Desktop')].map(d => join(d, 'Waifus Redragon.lnk'))
+  nota(`atalho na área de trabalho: ${atalhos.some(a => existsSync(a)) ? 'sim' : 'não'}`)
 
   const log = createWriteStream(join(out, 'app.log'))
   t0 = Date.now()
