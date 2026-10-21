@@ -94,7 +94,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      # NOTICE: o padrão da action pede o pacote 'tools', que o Google tirou do ar ("Failed to find package
+      # 'tools'", 21/10/2026). Os mesmos build-tools do release-pocket-android do AIRI.
       - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools build-tools;36.1.0
       - uses: pnpm/setup@v2
         with:
           runtime: node@26.7.0
