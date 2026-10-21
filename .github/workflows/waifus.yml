@@ -1,5 +1,5 @@
 # Waifus Redragon: compila o app (fork do AIRI) sob pedido. Nada roda sozinho: sem schedule, sem push.
-# Fonte: o AIRI no commit 747d4f6 com as mudanças da Integraction (ver WAIFUS.md).
+# Fonte: o AIRI no commit 747d4f6 com as mudanças da Integraction (ver README.md).
 #   alvo=web      versão de navegador (stage-web), artefato dist.zip
 #   alvo=windows  instalador .exe sem assinatura (stage-tamagotchi + electron-builder)
 #   alvo=android  APK de teste assinado com a chave de debug (stage-pocket + Capacitor)
