@@ -105,20 +105,28 @@ notice:
 about:
   subtitle: Versão para computador
   current-version: Versão atual
+  credit: Feito pela Integraction sobre o AIRI, de código aberto (licença MIT, Moeru AI).
   common:
     cancel: Cancelar
   links:
     title: Links
-    home: Início
+    home: Página
+    source: Código
     documentation: Documentação
     github: GitHub
   update:
+    notices:
+      protected-folder: O Waifus Redragon está instalado numa pasta protegida do Windows. A atualização pode pedir permissão de administrador.
+      path: 'Pasta: {path}'
+      downgrade-available: Este canal oferece uma versão mais antiga que a sua. Instalar esta atualização volta o Waifus Redragon para trás.
+      downgrade-downloaded: Versão mais antiga baixada deste canal. Ao reiniciar, ela será instalada.
     lane:
       label: Canal de atualização
       description: Escolha qual canal de versões acompanhar
       placeholder: Escolha o canal de atualização
     channels:
       auto: Automático
+      latest: Mais recente (qualquer versão)
       stable: Estável
       alpha: Alpha
       beta: Beta

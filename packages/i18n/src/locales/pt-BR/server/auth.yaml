@@ -1,17 +1,17 @@
 electronCallback:
   title:
     loading: Concluindo o login
-    openingAiri: Abrindo o AIRI
+    openingAiri: Abrindo o app
     signedIn: Você entrou
     signInFailed: Não foi possível entrar
-    finishSignInInAiri: Termine o login no AIRI
-    openAiriToContinue: Abra o AIRI para continuar
+    finishSignInInAiri: Termine o login no app
+    openAiriToContinue: Abra o app para continuar
   message:
-    checkingResponse: Conferindo a resposta do login e preparando a volta para o AIRI.
-    passingToAiri: Devolvendo o seu login para o AIRI. Esta página deve fechar em instantes.
-    syncedAndSafeToClose: Avisamos o app do AIRI em que você entrou.
+    checkingResponse: Conferindo a resposta do login e preparando a volta para o app.
+    passingToAiri: Devolvendo o seu login para o app. Esta página deve fechar em instantes.
+    syncedAndSafeToClose: Avisamos o app de que você entrou.
     invalidResponse: Não foi possível usar esta resposta de login.
-    loopbackUnreachable: O navegador não conseguiu falar com o AIRI pela porta local de retorno.
+    loopbackUnreachable: O navegador não conseguiu falar com o app pela porta local de retorno.
     tryOpenDirectly: Vamos tentar abrir a volta local diretamente. Se ainda falhar, use o botão abaixo.
     automaticHandoffFailed: A volta automática não terminou nesta sessão do navegador.
   label:
@@ -19,7 +19,7 @@ electronCallback:
     safeToClose: Já pode fechar esta aba.
     whyStillHere: Por que esta aba continua aberta?
   action:
-    openAiriManually: Abrir o AIRI manualmente
+    openAiriManually: Abrir o app manualmente
   hint:
     closeTabManually: Alguns navegadores não deixam esta página se fechar sozinha. Você pode fechá-la manualmente.
 signIn:
@@ -156,7 +156,7 @@ profile:
     setLinkSent: Procure em {email} o link para criar sua senha.
     setLinkFailed: Não foi possível enviar o link para criar a senha.
   linkedAccounts:
-    description: Entre no AIRI por estes provedores. Desvincule para tirar o acesso e vincule de novo para trocar de conta.
+    description: Entre na sua conta por estes provedores. Desvincule para tirar o acesso e vincule de novo para trocar de conta.
     status:
       linked: Vinculada
       notLinked: Não vinculada
@@ -198,6 +198,6 @@ webCallback:
     missingCodeOrState: Falta o código de autorização ou o state
     missingFlowState: Falta o estado do fluxo OIDC. Tente entrar de novo
     tokenExchangeFailed: A troca de token falhou
-    finalizing: Finalizando a autenticação com o AIRI.
+    finalizing: Finalizando a autenticação.
   action:
     tryAgain: Tentar de novo

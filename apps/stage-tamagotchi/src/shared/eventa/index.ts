@@ -618,6 +618,34 @@ export const electronAppIsWayland = defineInvokeEventa<boolean>('eventa:invoke:e
 export const electronAppIconGet = defineInvokeEventa<boolean>('eventa:invoke:electron:app-icon:get')
 export const electronAppIconSet = defineInvokeEventa<boolean, boolean>('eventa:invoke:electron:app-icon:set')
 
+/**
+ * State of the left screen edge dock for the main window.
+ *
+ * Use when:
+ * - The tab window, tray, settings or controls island must show or change the dock
+ *
+ * Expects:
+ * - `supported` is false where the app cannot place its windows (Wayland), and the option does not show there
+ * - `enabled` mirrors the persisted `edgeDock` option
+ * - `tucked` is the target state: true while the character slides out or stays hidden
+ *
+ * Returns:
+ * - N/A
+ */
+export interface EdgeDockState {
+  supported: boolean
+  enabled: boolean
+  tucked: boolean
+}
+
+export const electronEdgeDockGetState = defineInvokeEventa<EdgeDockState>('eventa:invoke:electron:windows:edge-dock:get-state')
+export const electronEdgeDockSetEnabled = defineInvokeEventa<EdgeDockState, boolean>('eventa:invoke:electron:windows:edge-dock:set-enabled')
+/** Tucks the character when she is shown and reveals her when she is tucked. Returns the new target state at once. */
+export const electronEdgeDockToggle = defineInvokeEventa<EdgeDockState>('eventa:invoke:electron:windows:edge-dock:toggle')
+export const electronEdgeDockStateChanged = defineEventa<EdgeDockState>('eventa:event:electron:windows:edge-dock:state-changed')
+/** Main process asks the main window renderer to slide its content in or out. Resolves when the slide ends. */
+export const electronEdgeDockSlide = defineInvokeEventa<void, { visible: boolean, duration: number }>('eventa:invoke:electron:windows:main:edge-dock:slide')
+
 export type ElectronGodotStageState = 'stopped' | 'starting' | 'running' | 'stopping' | 'error'
 
 /**

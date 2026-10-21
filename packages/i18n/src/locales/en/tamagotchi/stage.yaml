@@ -105,20 +105,28 @@ notice:
 about:
   subtitle: Desktop ver.
   current-version: Current Version
+  credit: Made by Integraction on top of AIRI, open source (MIT license, Moeru AI).
   common:
     cancel: Cancel
   links:
     title: Links
-    home: Home
+    home: Home page
+    source: Source code
     documentation: Documentations
     github: GitHub
   update:
+    notices:
+      protected-folder: Waifus Redragon is installed in a protected Windows folder. Update install may require a UAC admin prompt.
+      path: 'Path: {path}'
+      downgrade-available: Selected channel offers an older build than your current version. Installing this update will downgrade Waifus Redragon.
+      downgrade-downloaded: Downgrade package downloaded from selected channel. Restart will install an older version.
     lane:
       label: Update lane
       description: Choose channel release to follow
       placeholder: Choose update lane
     channels:
       auto: Auto
+      latest: Latest (any release)
       stable: Stable
       alpha: Alpha
       beta: Beta

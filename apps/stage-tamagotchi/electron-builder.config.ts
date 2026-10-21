@@ -43,6 +43,7 @@ else {
 export default {
   appId: 'br.com.integraction.waifus',
   productName: 'Waifus Redragon',
+  copyright: 'Copyright © 2026 Integraction',
   directories: {
     output: 'dist',
     buildResources: 'build',
@@ -118,12 +119,18 @@ export default {
       to: 'godot-stage',
       filter: ['**/*'],
     },
+    // NOTICE: Waifus Redragon is built on AIRI (MIT). The license asks that its notice ships with the app.
+    {
+      from: '../../LICENSE',
+      to: 'LICENSE-AIRI.txt',
+    },
   ],
   extraMetadata: {
-    name: 'ai.moeru.airi',
+    name: 'waifus-redragon',
+    productName: 'Waifus Redragon',
     main: 'out/main/index.js',
-    homepage: 'https://airi.moeru.ai/docs/',
-    repository: 'https://github.com/moeru-ai/airi',
+    homepage: 'https://pm.solidpower.com.br/waifus-redragon/',
+    repository: 'https://github.com/KirbyK64/waifus-redragon',
     license: 'MIT',
   },
   win: {
@@ -223,11 +230,11 @@ export default {
       channel: 'latest-${arch}',
     },
     extendInfo: {
-      NSAppleEventsUsageDescription: 'AIRI uses Automation to control apps for computer-use tasks.',
-      NSMicrophoneUsageDescription: 'AIRI requires microphone access for voice interaction',
-      NSSpeechRecognitionUsageDescription: 'AIRI uses Apple Speech to transcribe voice interactions on this device',
-      NSCameraUsageDescription: 'AIRI requires camera access for vision understanding',
-      NSBluetoothAlwaysUsageDescription: 'AIRI uses Bluetooth to read game controller input',
+      NSAppleEventsUsageDescription: 'Waifus Redragon uses Automation to control apps for computer-use tasks.',
+      NSMicrophoneUsageDescription: 'Waifus Redragon requires microphone access for voice interaction',
+      NSSpeechRecognitionUsageDescription: 'Waifus Redragon uses Apple Speech to transcribe voice interactions on this device',
+      NSCameraUsageDescription: 'Waifus Redragon requires camera access for vision understanding',
+      NSBluetoothAlwaysUsageDescription: 'Waifus Redragon uses Bluetooth to read game controller input',
     },
     // For self-publishing, testing, and distribution after modified the code without access to
     // an Apple Developer account, comment and uncomment the following 4 lines.
@@ -255,8 +262,8 @@ export default {
       channel: 'latest-${arch}',
     },
     category: 'Utility',
-    synopsis: 'AI VTuber/Waifu chatbot app inspired by Neuro-sama.',
-    description: 'AIRI is an AI VTuber/Waifu chatbot supporting Live2D/VRM avatars, featuring human-like interactions and modular stage-based rendering.',
+    synopsis: 'Ruby e Violet, as mascotes da Redragon, no seu PC.',
+    description: 'Waifus Redragon: Ruby e Violet, as mascotes da Redragon, no seu PC. Feito pela Integraction sobre o AIRI, de código aberto (licença MIT).',
     executableName: 'waifus-redragon',
     artifactName: '${productName}-${version}-linux-${arch}.${ext}',
     icon: 'build/icons/icon.png',

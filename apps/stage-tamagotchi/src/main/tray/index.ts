@@ -1,5 +1,5 @@
 import type { LocaleDetector } from '@intlify/core'
-import type { BrowserWindow, Rectangle } from 'electron'
+import type { BrowserWindow, MenuItem, Rectangle } from 'electron'
 
 import type { globalAppConfigSchema } from '../configs/global'
 import type { Config } from '../libs/electron/persistence'
@@ -7,6 +7,7 @@ import type { I18n } from '../libs/i18n'
 import type { ServerChannel } from '../services/airi/channel-server'
 import type { setupBeatSync } from '../windows/beat-sync'
 import type { setupCaptionWindowManager } from '../windows/caption'
+import type { EdgeDock } from '../windows/edge-dock'
 import type { SettingsWindowManager } from '../windows/settings'
 import type { WidgetsWindowManager } from '../windows/widgets'
 
@@ -112,10 +113,20 @@ interface SetupTrayParams {
   serverChannel: ServerChannel
   i18n: I18n
   appConfig: Config<typeof globalAppConfigSchema>
+  /** Missing when the dock failed to start. The tray then works as before. */
+  edgeDock?: EdgeDock
 }
 
 const setupTrayOnce = once((params: SetupTrayParams): void => {
   const mainWindowAnimator = new Animator(params.mainWindow)
+
+  /** Shows the main window. With the edge dock on, she slides in from the edge instead of toggling. */
+  function showMainWindow() {
+    if (params.edgeDock?.active)
+      void params.edgeDock.reveal({ focus: true })
+    else
+      toggleWindowShow(params.mainWindow)
+  }
 
   function animateMainWindowTo(workArea: Rectangle, position: Parameters<typeof resolveAlignedWindowBounds>[2]) {
     const bounds = resolveAlignedWindowBounds(params.mainWindow, workArea, position)
@@ -149,7 +160,17 @@ const setupTrayOnce = once((params: SetupTrayParams): void => {
     const halfWidthTarget = Math.floor(halfHeightTarget * ASPECT_RATIO)
 
     const contextMenu = Menu.buildFromTemplate([
-      { label: params.i18n.t('tamagotchi.electron.tray.menu.labels.label.show'), click: () => toggleWindowShow(params.mainWindow) },
+      { label: params.i18n.t('tamagotchi.electron.tray.menu.labels.label.show'), click: showMainWindow },
+      ...params.edgeDock?.isSupported
+        ? [
+            {
+              label: params.i18n.t('tamagotchi.electron.tray.menu.labels.label.edge_dock'),
+              type: 'checkbox',
+              checked: params.edgeDock.enabled,
+              click: (menuItem: MenuItem) => params.edgeDock?.setEnabled(Boolean(menuItem.checked)),
+            } as const,
+          ]
+        : [],
       { type: 'separator' },
       {
         label: params.i18n.t('tamagotchi.electron.tray.menu.labels.label.adjust_sizes'),
@@ -182,6 +203,8 @@ const setupTrayOnce = once((params: SetupTrayParams): void => {
       },
       {
         label: params.i18n.t('tamagotchi.electron.tray.menu.labels.label.align_to'),
+        // The edge dock owns the position while it is on.
+        enabled: !params.edgeDock?.enabled,
         submenu: [
           {
             label: params.i18n.t('tamagotchi.electron.tray.menu.labels.label.center'),
@@ -255,6 +278,7 @@ const setupTrayOnce = once((params: SetupTrayParams): void => {
   params.mainWindow.on('resize', rebuildContextMenu)
   params.mainWindow.on('move', rebuildContextMenu)
   const visibilityChangeUnListener = params.captionWindow.onVisibilityChanged(rebuildContextMenu)
+  const edgeDockChangeUnListener = params.edgeDock?.onChange(rebuildContextMenu)
 
   rebuildContextMenu()
 
@@ -279,6 +303,7 @@ const setupTrayOnce = once((params: SetupTrayParams): void => {
     params.mainWindow.off('move', rebuildContextMenu)
 
     visibilityChangeUnListener()
+    edgeDockChangeUnListener?.()
     stopLocaleEffect()
 
     rebuildContextMenu.cancel()
@@ -287,12 +312,12 @@ const setupTrayOnce = once((params: SetupTrayParams): void => {
     appTray.destroy()
   })
 
-  appTray.setToolTip('Project AIRI')
-  appTray.addListener('click', () => toggleWindowShow(params.mainWindow))
+  appTray.setToolTip('Waifus Redragon')
+  appTray.addListener('click', showMainWindow)
 
   // On macOS, there's a special double-click event
   if (isMacOS) {
-    appTray.addListener('double-click', () => toggleWindowShow(params.mainWindow))
+    appTray.addListener('double-click', showMainWindow)
   }
 })
 

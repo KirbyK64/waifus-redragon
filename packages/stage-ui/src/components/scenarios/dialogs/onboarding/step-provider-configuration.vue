@@ -8,6 +8,7 @@ import { computedAsync } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { WAIFUS_SOURCE_URL } from '../../../../constants/public-links'
 import { useProviderConfigStore } from '../../../../stores/providers/config'
 import { useProviderStore } from '../../../../stores/providers/provider'
 import { Alert } from '../../../misc'
@@ -253,7 +254,7 @@ initializeForm()
               <i18n-t keypath="settings.dialogs.onboarding.credentialsSafeOpenSource" tag="span">
                 <template #github>
                   <span inline-flex translate-y-1 items-center gap-1>
-                    <span i-simple-icons:github inline-block /><a decoration-underline decoration-dashed href="https://github.com/moeru-ai/airi" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <span i-simple-icons:github inline-block /><a decoration-underline decoration-dashed :href="WAIFUS_SOURCE_URL" target="_blank" rel="noopener noreferrer">GitHub</a>
                   </span>
                 </template>
               </i18n-t>

@@ -6,6 +6,8 @@ import { LocalStorageShim } from '../utils'
 // The classes are the ones of `useDark`: `dark` on the root element, and none for light.
 const colorMode = useColorMode({
   modes: { dark: 'dark', light: '' },
+  // NOTICE: Waifus Redragon starts dark even when the system is light, by the owner's order. A saved choice still wins.
+  initialValue: 'dark',
   disableTransition: true,
   // NOTICE: for histoire, used in packages/stage-ui, localStorage global variable exists but `storage.getItem is not a function` wil
   // thrown, here we added LocalStorageShim to avoid this issue, and it will fallback to real localStorage when it's available.

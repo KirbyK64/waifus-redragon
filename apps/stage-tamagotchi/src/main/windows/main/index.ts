@@ -59,6 +59,11 @@ const appConfigSchema = object({
 
 type AppConfig = InferOutput<typeof appConfigSchema>
 
+/** The title of the main window. It is also the key of its saved bounds in `config.json`. */
+const MAIN_WINDOW_TITLE = 'Waifus Redragon'
+/** The key of the saved bounds before the rename. Read once, so an installed app keeps the place of the window. */
+const LEGACY_MAIN_WINDOW_TITLE = 'AIRI'
+
 export async function setupMainWindow(params: {
   editorWindow: EditorWindowManager
   settingsWindow: SettingsWindowManager
@@ -96,6 +101,18 @@ export async function setupMainWindow(params: {
    * screen, so it asks for it while it is open, and the character stays in view on the desktop.
    */
   onKeepAbove?: (keepAbove: (above: boolean) => void) => void
+  /**
+   * Hooks of the left edge dock, which keeps this window at the screen edge while it is on. The dock is created after
+   * this window, so each hook asks it when it runs.
+   */
+  edgeDock?: {
+    /** The window starts tucked at the edge, so it must not show when it is ready. */
+    startsTucked: boolean
+    /** The dock moves the window, so a move must not overwrite the saved position. */
+    ownsBounds: () => boolean
+    /** Tucks the window instead of hiding it. Returns `false` when the dock is off. */
+    tuckOnClose: () => boolean
+  }
 }) {
   const {
     setup: setupConfig,
@@ -109,10 +126,12 @@ export async function setupMainWindow(params: {
 
   setupConfig()
 
-  const mainWindowConfig = getConfig().windows?.find(w => w.title === 'AIRI' && w.tag === 'main')
+  const savedWindows = getConfig().windows
+  const mainWindowConfig = savedWindows?.find(w => w.title === MAIN_WINDOW_TITLE && w.tag === 'main')
+    ?? savedWindows?.find(w => w.title === LEGACY_MAIN_WINDOW_TITLE && w.tag === 'main')
 
   const window = new BrowserWindow({
-    title: 'AIRI',
+    title: MAIN_WINDOW_TITLE,
     width: mainWindowConfig?.width ?? 450.0,
     height: mainWindowConfig?.height ?? 600.0,
     x: mainWindowConfig?.x,
@@ -175,23 +194,28 @@ export async function setupMainWindow(params: {
       config.windows = []
     }
 
-    const existingConfigIndex = config.windows.findIndex(w => w.title === 'AIRI' && w.tag === 'main')
+    const existingConfigIndex = config.windows.findIndex(w => w.title === MAIN_WINDOW_TITLE && w.tag === 'main')
+    // The edge dock moves the window and returns it to the saved position when it turns off, so only the size is saved
+    // while it is on.
+    const keepsPosition = params.edgeDock?.ownsBounds() === true
 
     if (existingConfigIndex === -1) {
       config.windows.push({
-        title: 'AIRI',
+        title: MAIN_WINDOW_TITLE,
         tag: 'main',
-        x: newBounds.x,
-        y: newBounds.y,
+        x: keepsPosition ? undefined : newBounds.x,
+        y: keepsPosition ? undefined : newBounds.y,
         width: newBounds.width,
         height: newBounds.height,
       })
     }
     else {
-      const mainWindowConfig = defu(config.windows[existingConfigIndex], { title: 'AIRI', tag: 'main' })
+      const mainWindowConfig = defu(config.windows[existingConfigIndex], { title: MAIN_WINDOW_TITLE, tag: 'main' })
 
-      mainWindowConfig.x = newBounds.x
-      mainWindowConfig.y = newBounds.y
+      if (!keepsPosition) {
+        mainWindowConfig.x = newBounds.x
+        mainWindowConfig.y = newBounds.y
+      }
       mainWindowConfig.width = newBounds.width
       mainWindowConfig.height = newBounds.height
 
@@ -209,7 +233,8 @@ export async function setupMainWindow(params: {
     }
 
     event.preventDefault()
-    window.hide()
+    if (!params.edgeDock?.tuckOnClose())
+      window.hide()
   })
 
   // Thanks to [@HeartArmy](https://github.com/HeartArmy) for the tip implementation.
@@ -239,7 +264,9 @@ export async function setupMainWindow(params: {
   }
   applyPin()
 
-  window.on('ready-to-show', () => window!.show())
+  // With the edge dock on, the window starts tucked at the edge, and the tab brings it in.
+  if (!params.edgeDock?.startsTucked)
+    window.on('ready-to-show', () => window!.show())
   protectPrivilegedWindowNavigation(window)
 
   await setupMainWindowElectronInvokes({

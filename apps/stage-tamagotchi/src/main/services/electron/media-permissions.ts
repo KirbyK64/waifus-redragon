@@ -11,6 +11,9 @@ type LocalAppWebContents = Pick<WebContents, 'getURL'>
 const LOCAL_APP_PERMISSION_NAMES = new Set<ElectronPermission>([
   'display-capture',
   'clipboard-sanitized-write',
+  // NOTICE: the Waifus activation screen has a Paste button for the access code.
+  // Only local app pages pass `shouldGrantLocalAppPermission`, never a remote page.
+  'clipboard-read',
   'hid',
 ])
 

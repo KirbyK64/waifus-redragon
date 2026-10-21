@@ -5,8 +5,10 @@ import { useAnalytics } from '@proj-airi/stage-ui/composables'
 import { extractMessageText } from '@proj-airi/stage-ui/libs/chat-sync/wire-message'
 import { useChatStore } from '@proj-airi/stage-ui/stores/chat'
 import { useChatSessionStore } from '@proj-airi/stage-ui/stores/chat/session-store'
+import { useAiriCardStore } from '@proj-airi/stage-ui/stores/modules/airi-card'
 import { useWindowFocus } from '@vueuse/core'
-import { shallowRef, useTemplateRef, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { computed, shallowRef, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import {
@@ -26,6 +28,8 @@ const { trackSpotlightUsed } = useAnalytics()
 const hideSpotlightWindow = useElectronEventaInvoke(electronSpotlightHide)
 const showResultNotification = useElectronEventaInvoke(electronSpotlightShowResultNotification)
 const { t } = useI18n()
+const { activeCard } = storeToRefs(useAiriCardStore())
+const inputPlaceholder = computed(() => t('tamagotchi.spotlight.placeholder', { name: activeCard.value?.name || 'Ruby' }))
 
 watch(useWindowFocus(), (focused) => {
   if (!focused) {
@@ -116,7 +120,7 @@ function handleKeydown(event: KeyboardEvent) {
         :disabled="sending"
         autofocus
         type="text"
-        placeholder="Ask AIRI…"
+        :placeholder="inputPlaceholder"
         :class="[
           'relative z-1',
           'w-full bg-transparent',

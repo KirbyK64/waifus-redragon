@@ -3,9 +3,11 @@ import type { ModelSettingsRuntimeSnapshot } from '@proj-airi/stage-ui/component
 
 import type { FullscreenGlideCurve, FullscreenMode } from '../../shared/eventa'
 
+import { defineInvokeHandler } from '@moeru/eventa'
 import { errorMessageFrom } from '@moeru/std'
 import { electron } from '@proj-airi/electron-eventa'
 import {
+  getElectronEventaContext,
   useElectronEventaInvoke,
   useElectronMouseAroundWindowBorder,
   useElectronMouseInElement,
@@ -39,7 +41,7 @@ import ControlsIslandRoot from '../components/stage-islands/controls-island/cont
 import ControlsIsland from '../components/stage-islands/controls-island/index.vue'
 import ResourceStatusIsland from '../components/stage-islands/resource-status-island/index.vue'
 
-import { defaultFullscreenSurface, electronAppIsWayland, electronFullscreenExit, electronFullscreenSetMode, electronMainWindowEnterFullscreen, electronMainWindowGetFullscreenState, electronMainWindowSetFullscreenBounds, electronOpenInlay, electronOpenOnboarding, electronOpenSettings } from '../../shared/eventa'
+import { defaultFullscreenSurface, electronAppIsWayland, electronEdgeDockGetState, electronEdgeDockSlide, electronFullscreenExit, electronFullscreenSetMode, electronMainWindowEnterFullscreen, electronMainWindowGetFullscreenState, electronMainWindowSetFullscreenBounds, electronOpenInlay, electronOpenOnboarding, electronOpenSettings } from '../../shared/eventa'
 import { fullscreenHostPages, fullscreenSurfaceOf } from '../components/fullscreen/surfaces'
 import { useModelSettingsRuntimeOwner } from '../composables/model-settings-runtime-owner'
 import { useFullscreenHost } from '../composables/use-fullscreen-host'
@@ -672,6 +674,107 @@ watch(
 onMounted(() => {
   if (onboardingStore.needsOnboarding)
     openOnboarding()
+})
+
+// The left edge dock: the main process asks this page to slide the character out of the window and back in. The window
+// itself stays on its display. See the NOTICE at `EdgeDock.slide` in the main process for why.
+const getEdgeDockState = useElectronEventaInvoke(electronEdgeDockGetState)
+const edgeDockHiddenTransform = 'translateX(-100vw)'
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+let edgeDockAnimation: Animation | undefined
+/** Grows with each slide request, so an older slide that still waits gives way to a newer one. */
+let edgeDockSlideRequest = 0
+
+function nextAnimationFrame() {
+  return new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+}
+
+/** The horizontal offset of the page now, also in the middle of a slide. */
+function currentEdgeDockOffset(): number {
+  try {
+    return new DOMMatrixReadOnly(getComputedStyle(document.body).transform).m41
+  }
+  catch {
+    return document.body.style.transform ? -window.innerWidth : 0
+  }
+}
+
+/**
+ * Slides the whole page out to the left edge of the window or back in. The transform sits on `body` only while she
+ * hides or moves, because the fullscreen mode places fixed elements, and a transform on an ancestor would move them.
+ */
+async function slideEdgeDock(visible: boolean, duration: number) {
+  const request = ++edgeDockSlideRequest
+  const body = document.body
+  if (duration <= 0 || prefersReducedMotion.matches) {
+    edgeDockAnimation?.cancel()
+    edgeDockAnimation = undefined
+    body.style.transform = visible ? '' : edgeDockHiddenTransform
+    return
+  }
+
+  if (visible) {
+    // The window was hidden until now. Two frames make sure it is on screen, so the first frames of the slide show.
+    await nextAnimationFrame()
+    await nextAnimationFrame()
+    if (request !== edgeDockSlideRequest)
+      return
+  }
+
+  const width = window.innerWidth
+  const from = currentEdgeDockOffset()
+  const to = visible ? 0 : -width
+  edgeDockAnimation?.cancel()
+  edgeDockAnimation = undefined
+  // The resting value applies when the slide ends, and at once when there is nothing to slide.
+  body.style.transform = visible ? '' : edgeDockHiddenTransform
+  const distance = Math.abs(to - from)
+  if (width <= 0 || distance < 1)
+    return
+
+  const animation = body.animate([
+    { transform: `translateX(${from}px)` },
+    { transform: `translateX(${to}px)` },
+  ], {
+    // A slide that starts halfway takes part of the time, so the speed stays the same.
+    duration: Math.max(120, Math.round(duration * Math.min(1, distance / width))),
+    easing: 'cubic-bezier(0.33, 1, 0.68, 1)',
+  })
+  edgeDockAnimation = animation
+  try {
+    await animation.finished
+  }
+  catch {
+    // A newer slide canceled this one.
+    return
+  }
+  if (edgeDockAnimation === animation)
+    edgeDockAnimation = undefined
+
+  // The main process hides the window next. Two frames let the empty frame reach the screen first, so the next show
+  // does not flash the old frame.
+  if (!visible && request === edgeDockSlideRequest) {
+    await nextAnimationFrame()
+    await nextAnimationFrame()
+  }
+}
+
+onScopeDispose(defineInvokeHandler(getElectronEventaContext(), electronEdgeDockSlide, payload => slideEdgeDock(payload?.visible ?? true, payload?.duration ?? 0)))
+onScopeDispose(() => {
+  edgeDockAnimation?.cancel()
+  document.body.style.transform = ''
+})
+// A page that loads while she is tucked, after a reload for example, starts hidden too.
+onMounted(async () => {
+  const request = edgeDockSlideRequest
+  try {
+    const state = await getEdgeDockState()
+    if (state?.tucked && request === edgeDockSlideRequest)
+      document.body.style.transform = edgeDockHiddenTransform
+  }
+  catch (error) {
+    console.warn('Failed to read the edge dock state:', error)
+  }
 })
 
 const cursorPosition = computed(() => ({

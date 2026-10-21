@@ -3,21 +3,24 @@ import type { AboutBuildInfo, AboutLink } from './types'
 
 import { computed } from 'vue'
 
+import { WAIFUS_HOME_URL, WAIFUS_SOURCE_URL } from '../../../constants/public-links'
+
 const props = withDefaults(defineProps<{
   title?: string
   highlight?: string
   subtitle?: string
   buildInfo?: AboutBuildInfo
   links?: AboutLink[]
+  linksTitle?: string
 }>(), {
-  title: 'Project',
-  highlight: 'AIRI',
+  title: 'Waifus',
+  highlight: 'Redragon',
   subtitle: '',
   links: () => ([
-    { label: 'Home', href: 'https://airi.moeru.ai/docs/', icon: 'i-solar:home-smile-outline' },
-    { label: 'Documentations', href: 'https://airi.moeru.ai/docs/en/docs/overview/', icon: 'i-solar:document-add-outline' },
-    { label: 'GitHub', href: 'https://github.com/moeru-ai/airi', icon: 'i-simple-icons:github' },
+    { label: 'Página', href: WAIFUS_HOME_URL, icon: 'i-solar:home-smile-outline' },
+    { label: 'Código', href: WAIFUS_SOURCE_URL, icon: 'i-simple-icons:github' },
   ]),
+  linksTitle: 'About',
 })
 
 const hasBuildInfo = computed(() => {
@@ -87,7 +90,7 @@ const hasBuildInfo = computed(() => {
 
     <div :class="['my-10']">
       <div :class="['text-neutral-500 dark:text-neutral-400']">
-        About
+        {{ linksTitle }}
       </div>
       <div :class="['mt-4 flex flex-col gap-2']">
         <a
@@ -119,5 +122,7 @@ const hasBuildInfo = computed(() => {
         </a>
       </div>
     </div>
+
+    <slot name="after-links" />
   </div>
 </template>

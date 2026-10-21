@@ -2,6 +2,7 @@ menu:
   labels:
     label:
       show: Show
+      edge_dock: Hide on the left edge
       adjust_sizes: Adjust sizes
       recommended_size: Recommended (450x600)
       full_height: Full Height

@@ -80,7 +80,7 @@ const uploadTaskKind = 'upload-display-model'
 const UploadPayloadSchema = v.object({ modelId: v.string(), requestId: v.string() })
 
 const displayModelsPresets: DisplayModel[] = [
-  { id: 'preset-vrm-carmen', format: DisplayModelFormat.VRM, type: 'url', url: presetVrmCarmenUrl, name: 'Carmen', previewImage: presetVrmCarmenPreview, importedAt: 1792540800000 },
+  { id: 'preset-vrm-carmen', format: DisplayModelFormat.VRM, type: 'url', url: presetVrmCarmenUrl, name: 'Ruby', previewImage: presetVrmCarmenPreview, importedAt: 1792540800000 },
   { id: 'preset-vrm-violet', format: DisplayModelFormat.VRM, type: 'url', url: presetVrmVioletUrl, name: 'Violet', previewImage: presetVrmVioletPreview, importedAt: 1792540800000 },
   { id: 'preset-live2d-1', format: DisplayModelFormat.Live2dZip, type: 'url', url: presetLive2dProUrl, name: 'Hiyori (Pro)', previewImage: presetLive2dPreview, importedAt: 1733113886840 },
   { id: 'preset-live2d-2', format: DisplayModelFormat.Live2dZip, type: 'url', url: presetLive2dFreeUrl, name: 'Hiyori (Free)', previewImage: presetLive2dPreview, importedAt: 1733113886840 },

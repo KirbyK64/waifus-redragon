@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { useElectronEventaInvoke } from '@proj-airi/electron-vueuse'
-import { OnboardingScreen, OnboardingStepAnalyticsNotice } from '@proj-airi/stage-ui/components'
-import { isAnalyticsAvailableInBuild } from '@proj-airi/stage-ui/libs/product-signals'
 import { useAuthStore } from '@proj-airi/stage-ui/stores/auth'
 import { useOnboardingStore } from '@proj-airi/stage-ui/stores/onboarding'
 import { useTheme } from '@proj-airi/ui'
@@ -9,6 +7,7 @@ import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
 import { electronAuthStartLogin, electronOnboardingClose } from '../../shared/eventa'
+import WaifusActivation from '../components/waifus-activation.vue'
 import { useOnboardingAuthentication } from '../composables/use-onboarding-authentication'
 import { useAuthStatusStore } from '../stores/auth-status'
 
@@ -32,11 +31,6 @@ const { closeOnboardingWindow } = useOnboardingAuthentication({
 })
 
 const bgClass = computed(() => isDark.value ? 'bg-[#0f0f0f]' : 'bg-white')
-const extraSteps = computed(() => {
-  return isAnalyticsAvailableInBuild()
-    ? [{ id: 'analytics-notice', component: OnboardingStepAnalyticsNotice }]
-    : []
-})
 
 async function handleSkipped() {
   onboardingStore.markSetupSkipped()
@@ -57,7 +51,8 @@ async function handleConfigured() {
   >
     <div class="min-h-8 w-full flex-shrink-0 select-none drag-region" :class="bgClass" />
     <div class="mx-8 mb-8 mt-2 min-h-0 flex flex-1 flex-col">
-      <OnboardingScreen :extra-steps="extraSteps" @skipped="handleSkipped" @configured="handleConfigured" />
+      <!-- Waifus Redragon: one access code configures chat, voice and hearing through the Integraction bridge. -->
+      <WaifusActivation @skipped="handleSkipped" @configured="handleConfigured" />
     </div>
   </div>
 </template>

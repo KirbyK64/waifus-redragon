@@ -1,7 +1,7 @@
 import { isFluxPurchaseDisabled } from '@proj-airi/stage-shared'
 
 import factorioPoster from '../../../assets/factorio-simple.png'
-import onboardingPoster from '../../../assets/onboarding.avif'
+import onboardingPoster from '../../../assets/onboarding-waifus.webp'
 
 export interface PromoBannerItem {
   watermark: string

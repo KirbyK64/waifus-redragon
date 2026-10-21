@@ -105,7 +105,7 @@ export function setupWorkspaceWindowManager(params: {
       : screen.getPrimaryDisplay()
 
     const window = new BrowserWindow({
-      title: 'AIRI',
+      title: 'Waifus Redragon',
       ...display.workArea,
       show: false,
       icon,

@@ -39,7 +39,7 @@ export function setupOnboardingWindowManager(params: {
 
   const reusableWindow = createReusableWindow(async () => {
     const newWindow = new BrowserWindow({
-      title: 'Welcome to AIRI',
+      title: 'Boas-vindas ao Waifus Redragon',
       width: 1000,
       height: 650,
       minWidth: 400,
@@ -51,6 +51,8 @@ export function setupOnboardingWindowManager(params: {
       titleBarStyle: isMacOS ? 'hidden' : undefined,
       transparent: false,
       backgroundColor: '#0f0f0f',
+      // The activation screen needs no File or Edit menu.
+      autoHideMenuBar: true,
       webPreferences: {
         preload: join(getElectronMainDirname(), '../preload/index.mjs'),
         sandbox: false,

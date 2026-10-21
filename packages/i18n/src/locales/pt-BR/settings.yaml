@@ -11,8 +11,8 @@ animations:
 dialogs:
   onboarding:
     official:
-      title: Provedor oficial do AIRI
-    title: Boas-vindas ao AIRI!
+      title: Provedor na nuvem
+    title: Boas-vindas ao Waifus Redragon!
     description: Vamos configurar o seu primeiro provedor de IA para começar.
     selectProvider: Escolha um provedor de IA
     configureProvider: Configurar {provider}
@@ -36,17 +36,17 @@ dialogs:
     retry: Tentar de novo
     credentialsSafeLabel: Guarde bem suas chaves de API e credenciais!
     credentialsSafeLocal: >-
-      O AIRI roda totalmente no seu computador e nunca vai roubar suas
+      O Waifus Redragon roda totalmente no seu computador e nunca vai roubar suas
       credenciais dos provedores de IA. Mas lembre que suas chaves de API são
       informação sensível. Guarde bem e não compartilhe com ninguém.
     credentialsSafeOpenSource: >-
-      O AIRI tem código aberto em {github}. Se quiser ver como tratamos suas
+      O Waifus Redragon tem código aberto em {github}. Se quiser ver como tratamos suas
       credenciais, fique à vontade para conferir o código.
     enableChatCheck: >-
-      Permitir que o AIRI mande uma mensagem de teste ("ping") para o primeiro
+      Permitir que o app mande uma mensagem de teste ("ping") para o primeiro
       modelo de conversa disponível, para conferir se ele responde
     start: Vamos lá!
-    loginPrompt: Entre para usar o provedor oficial do AIRI e ter a melhor experiência.
+    loginPrompt: Entre para usar o provedor na nuvem e ter a melhor experiência.
     loginAction: Entrar
     setupWithoutSigningIn: Configurar com o seu provedor
     pricingLink: Preços
@@ -64,7 +64,7 @@ dialogs:
       notificationsTitle: Notificações
       notificationsDescription: Permitir lembretes e avisos importantes.
       microphoneTitle: Microfone
-      microphoneDescription: Permitir que o AIRI use o microfone para entrada de voz e transcrição.
+      microphoneDescription: Permitir que o app use o microfone para entrada de voz e transcrição.
       requestAction: Pedir acesso
       optionalHint: Você pode continuar mesmo sem dar essas permissões.
       stateGranted: Concedida
@@ -102,7 +102,7 @@ analytics:
   notice:
     title: Estatísticas de uso
     description: >-
-      O AIRI coleta estatísticas de uso anônimas para entender como o app é
+      O Waifus Redragon coleta estatísticas de uso anônimas para entender como o app é
       usado e melhorar a estabilidade. Nenhum dado pessoal é coletado.
     privacyPrefix: Leia a
     privacyLink: política de privacidade
@@ -199,7 +199,7 @@ live2d:
     title: Extrair cores do modelo
     description: >
       Extrai as cores principais da tela de renderização atual.
-      Clique numa cor para aplicá-la no AIRI.
+      Clique numa cor para aplicá-la no app.
       Se as cores não agradarem, tente extrair várias vezes,
       com o modelo em poses diferentes.
     button-extract:
@@ -208,7 +208,7 @@ live2d:
     title: Animação
     motion-driver:
       title: Motor de movimento
-      description: Escolha como o AIRI cria o movimento ocioso do corpo e dos olhos.
+      description: Escolha como o app cria o movimento ocioso do corpo e dos olhos.
       options:
         universal:
           title: Universal
@@ -251,7 +251,7 @@ live2d:
       description: Força a animação de piscar com um temporizador externo
     blink-mode:
       title: Modo de piscar
-      description: Escolha a piscada própria do modelo ou o temporizador de piscada forçada do AIRI.
+      description: Escolha a piscada própria do modelo ou o temporizador de piscada forçada do app.
     idle-motion:
       title: Animação ociosa
       no-motion: Nenhuma animação disponível
@@ -272,7 +272,7 @@ live2d:
   clear-model-cache: Limpar o cache do modelo
   expressions:
     title: Expressões
-    description: Ative uma Expressão por um tempo ou escolha se o AIRI pode usá-la.
+    description: Ative uma Expressão por um tempo ou escolha se a personagem pode usá-la.
     override-toggle: Sistema de expressões
     sdk-preset-preserved-notice: >
       O gerenciador de expressões e a piscada do SDK continuam valendo quando isto está desligado.
@@ -282,8 +282,8 @@ live2d:
     actions:
       activate: 'Ativar {name}'
       deactivate: 'Desativar {name}'
-      show-to-airi: 'Liberar {name} para o AIRI'
-      hide-from-airi: 'Esconder {name} do AIRI'
+      show-to-airi: 'Liberar {name} para a personagem'
+      hide-from-airi: 'Esconder {name} da personagem'
 microphone: Microfone
 models: Modelo
 pages:
@@ -317,7 +317,7 @@ pages:
     connections:
       tab: Contas conectadas
       title: Contas conectadas
-      description: Entre no AIRI por estes provedores. Desvincule para tirar o acesso, depois vincule de novo para trocar de conta.
+      description: Entre na sua conta por estes provedores. Desvincule para tirar o acesso, depois vincule de novo para trocar de conta.
       status:
         linked: Vinculada
         notLinked: Não vinculada
@@ -334,7 +334,7 @@ pages:
         listFailed: Não foi possível carregar as contas conectadas.
         unlinkFailed: Não foi possível desvincular esta conta.
         linkFailed: Não foi possível começar a vinculação.
-        accountAlreadyLinkedToDifferentUser: Esta conta OAuth já está vinculada a outra conta do AIRI. Escolha outra conta do provedor, ou desvincule ela da outra conta do AIRI antes.
+        accountAlreadyLinkedToDifferentUser: Esta conta OAuth já está vinculada a outra conta. Escolha outra conta do provedor, ou desvincule ela da outra conta antes.
         oauthCallbackFailed: Não conseguimos conectar esta conta OAuth. Tente de novo ou escolha outra conta do provedor.
         lastAccount: Este é o seu único jeito de entrar. Defina uma senha antes de desvincular.
     security:
@@ -403,7 +403,7 @@ pages:
         pending: Esperando para enviar
         refused: Não enviado. A sua conta não tem espaço para mais cartões, então este fica só neste aparelho.
       conflict_copy_name: '{name} (cópia do conflito)'
-      conflict_notice: Outro aparelho alterou a mesma personagem. O AIRI guardou a versão deste aparelho como uma cópia.
+      conflict_notice: Outro aparelho alterou a mesma personagem. O app guardou a versão deste aparelho como uma cópia.
       history:
         tab: Histórico
         empty: Este cartão ainda não tem histórico.
@@ -479,7 +479,7 @@ pages:
     delete: Apagar
     delete_card: Apagar cartão
     delete_confirmation: Tem certeza de que quer apagar este cartão?
-    description: Use os modelos prontos de cartão de personagem do AIRI
+    description: Use os modelos prontos de cartão de personagem do app
     description_label: Descrição
     drop_here: Solte para enviar
     create_card: Criar um cartão novo
@@ -583,7 +583,7 @@ pages:
       model: Fala / Modelo
       voice: Fala / Voz
     systemprompt: Prompt de sistema
-    title: Cartão do AIRI
+    title: Cartão da personagem
     try_different_search: Tente buscar outro termo
     export: Exportar
     exported: Pacote do cartão exportado
@@ -592,13 +592,13 @@ pages:
     import_missing_file: Faltam arquivos obrigatórios no pacote do cartão
     import_invalid_file: O arquivo do pacote do cartão é inválido
     upload: Enviar
-    upload_desc: Clique ou arraste um pacote de cartão do AIRI para importar
+    upload_desc: Clique ou arraste um pacote de cartão de personagem para importar
   memory:
     description: Onde as memórias ficam guardadas e organizadas
     title: Memória
   data:
     title: Dados
-    description: Gerencie os dados guardados do AIRI, exportações e redefinições
+    description: Gerencie os dados guardados do app, exportações e redefinições
     sections:
       chats:
         title: Sessões de conversa
@@ -634,11 +634,11 @@ pages:
         delete: Apagar todos os dados
       desktop-folder:
         title: Abrir a pasta de dados do app
-        description: Abre a pasta de dados do AIRI no gerenciador de arquivos.
+        description: Abre a pasta de dados do app no gerenciador de arquivos.
         open: Abrir pasta
       desktop:
         title: Redefinir configurações e estado do app para computador
-        description: Limpa as configurações e o estado de execução do AIRI para computador.
+        description: Limpa as configurações e o estado de execução do app para computador.
         center: Mover a janela para o centro
         reset: Redefinir os dados do app para computador
     confirmations:
@@ -741,7 +741,7 @@ pages:
           name: Nano Banana (prévia)
           description: Usa o Google AI Studio para prévias de imagem e reações.
       card:
-        description: Configure como o AIRI gera imagens e conteúdo visual.
+        description: Configure como o app gera imagens e conteúdo visual.
         comfyui_empty: Nenhum workflow do ComfyUI configurado. Vá em Configurações → Provedores → ComfyUI para enviar um modelo de workflow.
         exposed_fields: '{count} campos expostos'
         open_on_replicate: Abrir no Replicate
@@ -825,14 +825,14 @@ pages:
             thinking:
               label: Raciocínio
               required-description: Este modelo exige o Raciocínio.
-              provider-default-description: O AIRI não tem configurações de raciocínio para este modelo. O OpenRouter aplica o padrão dele.
+              provider-default-description: O app não tem configurações de raciocínio para este modelo. O OpenRouter aplica o padrão dele.
       title: Consciência
     description: Raciocínio, visão, síntese de fala, jogos etc.
     gaming-factorio:
       description: Jogando Factorio!
       title: Factorio
       enable: Ligar a integração com o Factorio
-      enable-description: Permite que o AIRI interaja com o jogo Factorio
+      enable-description: Permite que a personagem interaja com o jogo Factorio
       server-address: Endereço do servidor
       server-address-description: O IP ou o nome do servidor do Factorio
       server-address-placeholder: Digite o endereço do servidor (ex. localhost ou 192.168.1.100)
@@ -902,13 +902,13 @@ pages:
           unresolved: Nenhuma personagem responde a esta pronúncia.
       voiceprint:
         title: Impressão de voz
-        description: Cadastre a sua voz para o AIRI reconhecer você.
+        description: Cadastre a sua voz para o app reconhecer você.
         intro: A impressão de voz é uma lista de números que o modelo calcula a partir da sua fala. Ela não tem áudio, mas consegue identificar você.
-        privacy: O AIRI guarda a sua impressão de voz só neste aparelho. Ela não vai junto na exportação do cartão, e o AIRI não envia para lugar nenhum. Para apagar, use Apagar impressão de voz nesta página, ou Apagar todos os dados nas configurações de Dados.
+        privacy: O app guarda a sua impressão de voz só neste aparelho. Ela não vai junto na exportação do cartão, e o app não envia para lugar nenhum. Para apagar, use Apagar impressão de voz nesta página, ou Apagar todos os dados nas configurações de Dados.
         download: O primeiro cadastro baixa o modelo de impressão de voz, de uns 28 MB.
         speaker-recognition:
           label: Reconhecimento de quem fala
-          description: Compara cada entrada de voz iniciada por fala ou por palavra de ativação com a sua impressão de voz, e grava a nota no rastro de IO da entrada. Entradas de Apertar para falar não recebem nota. Qualquer voz ainda pode iniciar uma entrada, e o modelo de conversa não recebe a nota. Enquanto o AIRI escuta, o modelo de impressão de voz fica na memória.
+          description: Compara cada entrada de voz iniciada por fala ou por palavra de ativação com a sua impressão de voz, e grava a nota no rastro de IO da entrada. Entradas de Apertar para falar não recebem nota. Qualquer voz ainda pode iniciar uma entrada, e o modelo de conversa não recebe a nota. Enquanto o app escuta, o modelo de impressão de voz fica na memória.
           needs-voiceprint: Cadastre a sua voz para ligar o reconhecimento de quem fala.
         status:
           none: Você não tem impressão de voz.
@@ -916,7 +916,7 @@ pages:
           outdated: O modelo de impressão de voz mudou. Cadastre de novo para usar a sua impressão de voz.
         instructions: Fique num lugar sem outras vozes, perto do microfone. Clique em Começar a gravar e leia estas frases em voz alta, com a sua voz de sempre.
         sentence-1: Hoje eu quero ver a previsão do tempo, ler as minhas mensagens e planejar o resto do meu dia.
-        sentence-2: Eu costumo falar com o AIRI à noite, quando a casa está quieta e eu tenho um tempinho livre.
+        sentence-2: Eu costumo falar com a Ruby à noite, quando a casa está quieta e eu tenho um tempinho livre.
         sentence-3: Por favor, guarde a minha voz, para você saber quando sou eu que estou falando.
         progress: '{seconds} s de fala. O cadastro precisa de pelo menos {min} s.'
         start: Começar a gravar
@@ -937,34 +937,34 @@ pages:
           microphone:
             title: Microfone
             label: Microfone
-            description: Liga o microfone para a Audição. O modo de entrada define quando o AIRI escuta.
+            description: Liga o microfone para a Audição. O modo de entrada define quando o app escuta.
             error: O microfone não está disponível
           input-device:
             label: Dispositivo de entrada
-            description: Escolha o microfone que o AIRI usa.
+            description: Escolha o microfone que o app usa.
             playground-description: A Audição e a área de testes usam este microfone.
             placeholder: Escolha um microfone
           auto-send:
             title: Transcrições
-            description: Escolha o que o AIRI faz com o texto da sua fala.
+            description: Escolha o que o app faz com o texto da sua fala.
             label: Enviar sozinho
-            label-description: O AIRI manda a transcrição para a conversa depois de um tempo. Desligue para ler e editar o texto antes. Cada mensagem enviada gasta tokens.
+            label-description: O app manda a transcrição para a conversa depois de um tempo. Desligue para ler e editar o texto antes. Cada mensagem enviada gasta tokens.
             delay: Tempo até enviar
-            delay-description: O tempo que o AIRI espera antes de mandar a transcrição.
+            delay-description: O tempo que o app espera antes de mandar a transcrição.
             immediate: Na hora
           input-mode:
             title: Modo de entrada
-            description: Escolha como o AIRI começa a escutar enquanto o microfone está ligado.
+            description: Escolha como o app começa a escutar enquanto o microfone está ligado.
             label: Começar a escutar
             always-on: Sempre ligado
-            always-on-description: O AIRI escuta o tempo todo e responde quando você fala.
+            always-on-description: A personagem escuta o tempo todo e responde quando você fala.
             push-to-talk: Apertar para falar
-            push-to-talk-description: O AIRI só escuta enquanto você segura a tecla de Apertar para falar. O microfone só fica aberto enquanto você segura.
+            push-to-talk-description: A personagem só escuta enquanto você segura a tecla de Apertar para falar. O microfone só fica aberto enquanto você segura.
             push-to-talk-unavailable: Indisponível aqui. Este app não tem tecla de Apertar para falar neste aparelho.
             stranded-title: Apertar para falar não está disponível aqui
-            stranded-description: Este app não tem tecla de Apertar para falar neste aparelho, então o AIRI não escuta. Para falar com o AIRI aqui, escolha Sempre ligado ou Palavras de ativação.
+            stranded-description: Este app não tem tecla de Apertar para falar neste aparelho, então a personagem não escuta. Para falar com ela aqui, escolha Sempre ligado ou Palavras de ativação.
             wake-word: Palavras de ativação
-            wake-word-description: O microfone fica ligado, mas o AIRI só escuta depois que você fala a palavra de ativação de uma personagem.
+            wake-word-description: O microfone fica ligado, mas a personagem só escuta depois que você fala a palavra de ativação dela.
             wake-word-status:
               no-words: Nenhuma personagem tem palavras de ativação. Peça a uma personagem na conversa para definir as dela.
               unconfigured: A detecção de palavras de ativação começa quando o microfone liga.
@@ -973,9 +973,9 @@ pages:
               error: 'O modelo de palavras de ativação não está disponível: {error}'
           end-judge:
             title: Fim da fala
-            description: Quando você pausa, um modelo de conversa lê a transcrição e decide se você terminou. Se não terminou, o AIRI espera mais 3 segundos para você continuar.
+            description: Quando você pausa, um modelo de conversa lê a transcrição e decide se você terminou. Se não terminou, o app espera mais 3 segundos para você continuar.
             enabled: Conferir se eu terminei de falar
-            enabled-description: A transcrição de cada pausa vai para o modelo de reescrita. Desligado, o AIRI encerra a sua fala depois de uma pausa curta.
+            enabled-description: A transcrição de cada pausa vai para o modelo de reescrita. Desligado, o app encerra a sua fala depois de uma pausa curta.
           rephrase:
             title: Reescrita da transcrição
             description: Um modelo de conversa corrige erros de reconhecimento e tira as palavras de enchimento antes de a transcrição virar rascunho. O texto original fica guardado.
@@ -1160,7 +1160,7 @@ pages:
       description: Conversa por texto e voz no Discord
       title: Discord
       enable: Ligar a integração com o Discord
-      enable-description: Permite que o AIRI interaja pelo Discord
+      enable-description: Permite que a personagem interaja pelo Discord
       token: Token do bot
       token-description: O token do seu bot do Discord
       token-placeholder: Digite o token do seu bot do Discord
@@ -1201,8 +1201,8 @@ pages:
             unsupported_voice_warning_content: >-
               Tente outro modelo ou provedor. Estamos trabalhando para aceitar
               todas as vozes deste modelo o quanto antes. Se precisar com
-              urgência, avise a gente no GitHub em
-              https://github.com/moeru-ai/airi/issues.
+              urgência, avise a gente pela página do app em
+              https://pm.solidpower.com.br/waifus-redragon/.
             show_less: Mostrar menos
             show_more: Mostrar mais
             title: Provedor
@@ -1247,7 +1247,7 @@ pages:
       description: Navegação e uso do X / Twitter
       title: X / Twitter
       enable: Ligar a integração com o X / Twitter
-      enable-description: Permite que o AIRI interaja com o X / Twitter
+      enable-description: Permite que a personagem interaja com o X / Twitter
       api-key: Chave de API
       api-key-description: A sua chave de API do X / Twitter
       api-key-placeholder: Digite a sua chave de API do X / Twitter
@@ -1331,9 +1331,9 @@ pages:
         airi-disagree: Não, obrigada
     home-assistant:
       title: Home Assistant
-      description: Deixa o AIRI ler e controlar os seus aparelhos do Home Assistant.
+      description: Deixa a personagem ler e controlar os seus aparelhos do Home Assistant.
       enable: Ligar o Home Assistant
-      enable-description: Permite que o AIRI leia e controle os seus aparelhos
+      enable-description: Permite que a personagem leia e controle os seus aparelhos
       base-url:
         label: Endereço
         placeholder: http://homeassistant.local:8123
@@ -1361,15 +1361,15 @@ pages:
         failed-policy-rollback: O salvamento foi recusado. A lista de aparelhos não chegou à janela que roda as ferramentas, então o modelo não alcança nenhum aparelho. Tente de novo.
       access:
         label: Acesso aos aparelhos
-        description: Escolha quais aparelhos o AIRI lê e controla.
+        description: Escolha quais aparelhos a personagem lê e controla.
         mode-all: Todos os aparelhos
         mode-allow: Lista de liberados
         mode-deny: Lista de bloqueados
-        all-hint: O AIRI alcança todos os aparelhos. Escolha uma lista para limitar.
+        all-hint: A personagem alcança todos os aparelhos. Escolha uma lista para limitar.
         rule-allow: Só os aparelhos que você escolher ficam ao alcance.
         rule-deny: Todos os aparelhos ficam ao alcance, menos os que você escolher.
         selected-count: '{count} escolhidos'
-        empty-warning: Escolha pelo menos um aparelho. O AIRI não alcança nada até você escolher.
+        empty-warning: Escolha pelo menos um aparelho. A personagem não alcança nada até você escolher.
         search: Buscar aparelhos
         reload: Recarregar aparelhos
         loading: Carregando os aparelhos...
@@ -1527,16 +1527,16 @@ pages:
       deleted: 'O modelo de {name} foi apagado. A conversa faz um novo na próxima chamada da ferramenta, ou quando você abre uma das chamadas dela.'
     web-search:
       title: Busca na web
-      description: Deixa o AIRI buscar informações atuais na web
+      description: Deixa a personagem buscar informações atuais na web
       enable: Ligar a busca na web
-      enable-description: Permite que o AIRI busque na web durante a conversa
+      enable-description: Permite que a personagem busque na web durante a conversa
       api-key: Chave de API do Tavily
       api-key-description: A busca na web usa o Tavily. Pegue uma chave de API grátis em tavily.com.
       api-key-placeholder: Digite a sua chave de API do Tavily
       configured: A busca na web está pronta para usar!
     mcp-server:
       title: Servidores MCP
-      description: Configure servidores MCP e traga as ferramentas deles para o AIRI.
+      description: Configure servidores MCP e traga as ferramentas deles para o app.
       config-path: Arquivo de configuração
       runtime-title: Estado de execução
       empty: Nenhum servidor MCP ainda. Clique em "Adicionar servidor" abaixo para criar um, ou cole uma configuração em "Editar JSON".
@@ -1576,7 +1576,7 @@ pages:
           placeholder: ex. filesystem
         transport:
           label: Tipo
-          description: Como o AIRI chega a este servidor.
+          description: Como o app chega a este servidor.
           stdio: Processo local
           http: URL remota
         url:
@@ -1613,7 +1613,7 @@ pages:
         placeholder: Cole o mcp.json aqui…
       test:
         title: Testar conexão
-        description: O AIRI conecta rapidinho ao servidor e lista as ferramentas que ele oferece.
+        description: O app conecta rapidinho ao servidor e lista as ferramentas que ele oferece.
         pick-server-label: Servidor
         no-servers: Nada para testar ainda
         no-server-selected: Escolha um servidor antes.
@@ -1790,9 +1790,8 @@ pages:
                       Calma: nas instâncias do Ollama, é preciso uma configuração
                       a mais para passar. Defina <code>OLLAMA_HOST</code> de forma
                       explícita ao abrir o app do Ollama ou o servidor do Ollama
-                      pela linha de comando. Para os detalhes, veja o <a
-                      href="https://airi.moeru.ai/docs/en/docs/manual/integrations/providers/chat/ollama">guia
-                      de integração do Ollama</a>.
+                      pela linha de comando. Para os detalhes, veja a documentação
+                      do Ollama.
     common:
       continueAnyway: Continuar assim mesmo
       goToModelSelection: Escolher modelo →
@@ -1860,9 +1859,9 @@ pages:
     helpinfo:
       title: Primeira vez aqui?
       description: >
-        O AIRI precisa de pelo menos um provedor de {chat} configurado para pensar
+        O app precisa de pelo menos um provedor de {chat} configurado para pensar
         e se comportar direito. Pense nele como o cérebro das personagens que
-        vivem no AIRI.
+        vivem no app.
     explained:
       chat: Provedores de modelos de geração de texto. Ex. OpenRouter, OpenAI, Ollama.
       Speech: Provedores de modelos de fala (texto para fala). Ex. ElevenLabs, Azure Speech.
@@ -1884,7 +1883,7 @@ pages:
         asset:
           title: Arquivos do modelo
           unknown: Conferindo os arquivos...
-          bundled: Já vem com o AIRI
+          bundled: Já vem com o app
           installed: Guardado neste aparelho
           missing: Baixa quando for usado
           downloading: Baixando...
@@ -1905,16 +1904,16 @@ pages:
             placeholder: en-US
       app-local-audio-transcription:
         title: App (local)
-        description: https://github.com/moeru-ai/xsai-transformers
+        description: Roda neste computador, sem chave de API
       app-local-audio-speech:
         title: App (local)
-        description: https://github.com/moeru-ai/xsai-transformers
+        description: Roda neste computador, sem chave de API
       browser-local-audio-transcription:
         title: Navegador (local)
-        description: https://github.com/moeru-ai/xsai-transformers
+        description: Roda no navegador, sem chave de API
       browser-local-audio-speech:
         title: Navegador (local)
-        description: https://github.com/moeru-ai/xsai-transformers
+        description: Roda no navegador, sem chave de API
       alibaba-cloud-model-studio:
         description: bailian.console.aliyun.com
         title: Alibaba Cloud Model Studio
@@ -2029,7 +2028,7 @@ pages:
               placeholder: http://localhost:8188
           cors:
             title: Bloqueio de CORS detectado
-            description: Por padrão, o ComfyUI bloqueia requisições de outros apps. Para o AIRI conectar, abra o ComfyUI com a opção `--enable-cors-header "*"`.
+            description: Por padrão, o ComfyUI bloqueia requisições de outros apps. Para o app conectar, abra o ComfyUI com a opção `--enable-cors-header "*"`.
             command: python main.py --enable-cors-header "*"
           workflows:
             title: Modelos de workflow
@@ -2041,7 +2040,7 @@ pages:
             remove: Remover
             config_snippet: Trecho de configuração de arte
             copy_json: Copiar JSON
-            paste_hint: Cole isto na configuração de arte do seu Cartão do AIRI para substituir estes nós.
+            paste_hint: Cole isto na configuração de arte do seu cartão da personagem para substituir estes nós.
           upload:
             prompt: Solte ou escolha um arquivo workflow_api.json
             invalid_json: JSON inválido
@@ -2318,13 +2317,13 @@ pages:
         title: Prompt API
       official:
         title: Provedor oficial
-        description: Provedor de IA oficial do AIRI.
+        description: Provedor de IA na nuvem.
         speech-title: Provedor de fala oficial
-        speech-description: Provedor oficial de texto para fala do AIRI.
+        speech-description: Provedor de texto para fala na nuvem.
         speech-streaming-title: Provedor oficial de fala em streaming
-        speech-streaming-description: Provedor oficial de texto para fala do AIRI com baixa latência (WebSocket bidirecional).
+        speech-streaming-description: Provedor de texto para fala na nuvem com baixa latência (WebSocket bidirecional).
         transcription-title: Provedor de transcrição oficial
-        transcription-description: Provedor oficial de fala para texto do AIRI.
+        transcription-description: Provedor de fala para texto na nuvem.
       transcriptions:
         playground:
           title: Área de testes de transcrição
@@ -2345,7 +2344,7 @@ pages:
     server-auth-token:
       label: Token de pareamento
       description: >-
-        Os outros aparelhos usam este token para parear com este servidor. O AIRI
+        Os outros aparelhos usam este token para parear com este servidor. O app
         gera um token quando este campo está vazio.
       placeholder: Gerar sozinho
     qr:
@@ -2354,7 +2353,7 @@ pages:
         Leia este QR code com o app do celular. O app testa cada endereço local
         e salva o primeiro que funcionar.
       refresh: Atualizar
-      image-alt: QR code de pareamento do AIRI
+      image-alt: QR code de pareamento do app
       candidates: Endereços possíveis
       token-hint: >-
         O QR code inclui o token de pareamento. Não mostre o QR code em
@@ -2364,8 +2363,8 @@ pages:
         unavailable: Não foi possível preparar o QR code de conexão.
     qr-scan:
       title: Conexão rápida
-      description: Leia o QR code do Tamagotchi para conectar rápido
-      instructions: Aponte a câmera para o QR code de conexão do AIRI.
+      description: Leia o QR code do app no computador para conectar rápido
+      instructions: Aponte a câmera para o QR code de conexão do app.
       action: Ler
       success:
         title: Endereço conectado salvo
@@ -2511,8 +2510,8 @@ pages:
           presets:
             default:
               colors:
-                color-1: Verde AIRI
-              description: A cor esverdeada padrão, trazida pelo AIRI para você!
+                color-1: Verde
+              description: A cor verde original do app.
               title: Cor padrão
             morandi:
               colors:
@@ -2768,7 +2767,7 @@ tachie:
 websocket-secure-enabled:
   title: Servir como WebSocket seguro (WSS)
   description: >-
-    Usa WSS para conexões seguras com o celular. O AIRI cria um certificado
+    Usa WSS para conexões seguras com o celular. O app cria um certificado
     autoassinado.
 wip:
   title: Em construção

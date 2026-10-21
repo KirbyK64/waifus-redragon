@@ -91,6 +91,9 @@ jobs:
           retention-days: 3
       - name: Prova no Windows
         shell: pwsh
+        env:
+          # Código de teste com teto baixo na ponte da Integraction; revogável em _ops/waifus-redragon/codigos.php.
+          WAIFUS_CODIGO: ${{ secrets.WAIFUS_CODIGO_TESTE }}
         run: |
           npm i --no-save --prefix .github/waifus-prova playwright-core@1.56.1
           $exe = (Get-ChildItem apps/stage-tamagotchi/dist/*-setup.exe | Select-Object -First 1).FullName
@@ -122,6 +125,8 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile "$env:RUNNER_TEMP\setup.exe"
       - name: Prova no Windows
         shell: pwsh
+        env:
+          WAIFUS_CODIGO: ${{ secrets.WAIFUS_CODIGO_TESTE }}
         run: |
           npm i --no-save --prefix .github/waifus-prova playwright-core@1.56.1
           node .github/waifus-prova/prova.mjs "$env:RUNNER_TEMP\setup.exe" "$env:RUNNER_TEMP\prova"

@@ -3,13 +3,13 @@
   "type": "module",
   "version": "0.12.0-beta.5",
   "private": true,
-  "description": "LLM powered virtual character",
+  "description": "Ruby e Violet, as mascotes da Redragon, no seu PC",
   "author": {
-    "name": "Moeru AI",
-    "email": "airi@moeru.ai",
-    "url": "https://github.com/moeru-ai"
+    "name": "Integraction",
+    "email": "gui@solidpower.com.br",
+    "url": "https://pm.solidpower.com.br/waifus-redragon/"
   },
-  "homepage": "https://airi.moeru.ai/docs/",
+  "homepage": "https://pm.solidpower.com.br/waifus-redragon/",
   "main": "./out/main/index.js",
   "scripts": {
     "lint": "eslint --cache .",

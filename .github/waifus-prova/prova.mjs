@@ -1,4 +1,6 @@
 // Prova do app num Windows de verdade (runner do GitHub): instala calado, abre, fotografa a tela e cada janela.
+// Com WAIFUS_CODIGO no ambiente (segredo do repositório), também ativa com o código de teste, abre a conversa,
+// manda uma mensagem, espera a resposta e testa a setinha da esquerda. O código nunca vai pro relato.
 // uso: node prova.mjs <instalador.exe> <pasta-de-saida>
 import { execFileSync, spawn, spawnSync } from 'node:child_process'
 import { createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -14,6 +16,7 @@ const espera = ms => new Promise(r => setTimeout(r, ms))
 const PORTA = 9333
 // NOTICE: o nome do exe vem do executableName do electron-builder (waifus-redragon.exe), não do productName
 const NOME = /^waifus.*\.exe$/i
+const CODIGO = (process.env.WAIFUS_CODIGO ?? '').trim()
 
 function tela(nome) {
   try {
@@ -41,6 +44,152 @@ function acha() {
     }
   }
   return null
+}
+
+const paginas = browser => browser.contexts().flatMap(c => c.pages())
+
+/** Espera aparecer uma janela cujo endereço tem o trecho. */
+async function achaPagina(browser, trecho, ms = 20000) {
+  const fim = Date.now() + ms
+  while (Date.now() < fim) {
+    const p = paginas(browser).find(x => x.url().includes(trecho))
+    if (p)
+      return p
+    await espera(500)
+  }
+  return null
+}
+
+/** A tela de ativação: confere o fundo escuro, recusa um código inventado e aceita o de teste. */
+async function ativar(browser) {
+  const pag = await achaPagina(browser, '#/onboarding', 30000)
+  if (!pag) {
+    nota('ativação: a janela de boas-vindas não apareceu')
+    return false
+  }
+  await pag.waitForSelector('#waifus-code', { timeout: 30000 })
+  const tela = await pag.evaluate(() => ({
+    fundo: getComputedStyle(document.querySelector('.activation')).backgroundColor,
+    texto: document.querySelector('.activation').innerText.replace(/\s+/g, ' ').slice(0, 300),
+  }))
+  nota(`ativação: tela aberta, fundo ${tela.fundo}`)
+  nota(`  texto: ${tela.texto}`)
+  await pag.screenshot({ path: join(out, '10-ativar.png') })
+
+  await pag.fill('#waifus-code', `wr-${'x'.repeat(32)}`)
+  await pag.click('button[type=submit]')
+  await pag.waitForFunction(() => /não reconheceu/.test(document.querySelector('#waifus-status')?.textContent ?? ''), null, { timeout: 20000 })
+    .then(() => nota('ativação: código inventado recusado com aviso'), () => nota(`ativação: código inventado sem o aviso esperado (${pag.url()})`))
+  await pag.screenshot({ path: join(out, '11-codigo-errado.png') })
+
+  if (!CODIGO) {
+    nota('ativação: sem WAIFUS_CODIGO no ambiente, parei aqui')
+    return false
+  }
+  await pag.fill('#waifus-code', CODIGO)
+  const t0 = Date.now()
+  const fechou = pag.waitForEvent('close', { timeout: 40000 }).then(() => true, () => false)
+  await pag.click('button[type=submit]')
+  if (!await fechou) {
+    nota(`ativação: a janela não fechou; aviso na tela: ${await pag.textContent('#waifus-status').catch(() => '?')}`)
+    await pag.screenshot({ path: join(out, '12-ativar-falhou.png') }).catch(() => {})
+    return false
+  }
+  nota(`ativação: código de teste aceito, a janela fechou em ${((Date.now() - t0) / 1000).toFixed(1)} s`)
+  return true
+}
+
+/** Abre a conversa pelo botão do palco, manda uma pergunta e espera a resposta aparecer. */
+async function conversar(browser) {
+  const palco = paginas(browser).find(p => p.url().includes('synced-leader=true') && /#\/?$/.test(p.url()))
+  if (!palco) {
+    nota('conversa: não achei a janela do palco')
+    return
+  }
+  const antes = new Set(paginas(browser))
+  await palco.locator('[aria-label="Abrir a conversa"]').first().click({ force: true, timeout: 10000 })
+    .catch(e => nota(`conversa: botão Abrir a conversa falhou (${e.message.split('\n')[0]})`))
+  let chat = null
+  for (let i = 0; i < 40 && !chat; i++) {
+    chat = paginas(browser).find(p => !antes.has(p) || /#\/chat/.test(p.url()))
+    if (!chat)
+      await espera(500)
+  }
+  if (!chat) {
+    nota('conversa: a janela da conversa não abriu')
+    return
+  }
+  nota(`conversa: janela aberta (${chat.url().split('#')[1] ?? chat.url()})`)
+  await chat.waitForSelector('textarea', { timeout: 20000 })
+  const pergunta = 'Oi! Em uma frase curta: qual é o seu nome?'
+  await chat.locator('textarea').first().fill(pergunta)
+  await chat.locator('textarea').first().press('Enter')
+  // A resposta chega aos pedaços: vale o texto depois da pergunta quando ele para de mudar por 3 s.
+  const t0 = Date.now()
+  const depoisDaPergunta = () => chat.evaluate((q) => {
+    const texto = document.body.innerText
+    const i = texto.lastIndexOf(q)
+    return i < 0 ? '' : texto.slice(i + q.length).replace(/\s+/g, ' ').trim()
+  }, pergunta).catch(() => '')
+  const inicio = await depoisDaPergunta()
+  let ultimo = inicio
+  let parado = Date.now()
+  while (Date.now() - t0 < 60000) {
+    await espera(500)
+    const agora = await depoisDaPergunta()
+    if (agora !== ultimo) {
+      ultimo = agora
+      parado = Date.now()
+    }
+    else if (ultimo !== inicio && ultimo.length > 20 && Date.now() - parado > 3000) {
+      break
+    }
+  }
+  nota(ultimo !== inicio
+    ? `conversa: resposta em ${((parado - t0) / 1000).toFixed(1)} s: ${ultimo.slice(0, 300)}`
+    : `conversa: nada novo na tela em 60 s (texto depois da pergunta: ${inicio.slice(0, 200)})`)
+  // tempo pra voz tocar
+  await espera(8000)
+  await chat.screenshot({ path: join(out, '13-conversa.png') }).catch(e => nota(`conversa: foto falhou (${e.message.split('\n')[0]})`))
+  tela('14-area-de-trabalho-conversa.png')
+}
+
+/** Liga "Esconder na esquerda" nas Configurações e usa a setinha da borda: esconde, mostra, esconde de novo. */
+async function esquerda(browser) {
+  // Qualquer janela do app serve pra abrir as Configurações: o liga e desliga vale pra todas.
+  const config = paginas(browser).find(p => /#\/chat/.test(p.url())) ?? paginas(browser).find(p => !p.url().includes('synced-leader=true'))
+  if (!config) {
+    nota('esquerda: não achei uma janela pra abrir as Configurações')
+    return
+  }
+  await config.evaluate(() => { location.hash = '#/settings/system/general' })
+  const campo = config.locator('label', { hasText: 'Esconder na esquerda' }).first()
+  if (!await campo.waitFor({ timeout: 20000 }).then(() => true, () => false)) {
+    nota(`esquerda: a opção Esconder na esquerda não apareceu (${config.url()})`)
+    await config.screenshot({ path: join(out, '15-config-sem-opcao.png') }).catch(() => {})
+    return
+  }
+  await config.screenshot({ path: join(out, '15-config.png') })
+  await campo.click()
+  nota('esquerda: opção ligada nas Configurações')
+  const aba = await achaPagina(browser, '#/edge-tab', 20000)
+  if (!aba) {
+    nota('esquerda: a setinha da borda não apareceu')
+    return
+  }
+  const rotulo = () => aba.locator('button').first().getAttribute('aria-label').catch(() => '?')
+  await espera(2500)
+  nota(`esquerda: setinha na borda, diz "${await rotulo()}"`)
+  tela('16-esquerda-escondida.png')
+  await aba.screenshot({ path: join(out, '16-setinha.png') }).catch(() => {})
+  await aba.locator('button').first().click()
+  await espera(2500)
+  nota(`esquerda: cliquei na setinha, agora diz "${await rotulo()}"`)
+  tela('17-esquerda-apareceu.png')
+  await aba.locator('button').first().click()
+  await espera(2500)
+  nota(`esquerda: cliquei de novo, agora diz "${await rotulo()}"`)
+  tela('18-esquerda-escondida-de-novo.png')
 }
 
 async function main() {
@@ -80,11 +229,18 @@ async function main() {
   nota(`app ainda rodando depois de 25 s: ${saiu === null ? 'sim' : `não (saiu com ${saiu})`}`)
   tela('01-area-de-trabalho.png')
 
+  const browser = await chromium.connectOverCDP(`http://127.0.0.1:${PORTA}`)
+  if (await ativar(browser).catch((e) => { nota(`ativação: erro ${e.message.split('\n')[0]}`); return false })) {
+    await espera(5000)
+    tela('12-area-de-trabalho-ativado.png')
+    await conversar(browser).catch(e => nota(`conversa: erro ${e.message.split('\n')[0]}`))
+    await esquerda(browser).catch(e => nota(`esquerda: erro ${e.message.split('\n')[0]}`))
+  }
+
   const alvos = await (await fetch(`http://127.0.0.1:${PORTA}/json/list`)).json()
   for (const a of alvos)
     nota(`janela: ${a.type} · ${a.title} · ${a.url}`)
 
-  const browser = await chromium.connectOverCDP(`http://127.0.0.1:${PORTA}`)
   const erros = []
   let n = 0
   for (const ctx of browser.contexts()) {
@@ -112,6 +268,8 @@ async function main() {
       try {
         await page.screenshot({ path: join(out, `02-janela-${n}.png`), timeout: 15000 })
         nota(`  foto: 02-janela-${n}.png`)
+        // sem o fundo branco do print: mostra se a própria página é transparente atrás dela
+        await page.screenshot({ path: join(out, `02-janela-${n}-alfa.png`), timeout: 15000, omitBackground: true })
       }
       catch (e) { nota(`  foto da janela ${n} falhou: ${e.message.split('\n')[0]}`) }
     }

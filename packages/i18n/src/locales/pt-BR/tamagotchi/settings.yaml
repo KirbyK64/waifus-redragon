@@ -4,7 +4,7 @@ allow-visible-on-all-workspaces:
 microphone-permission:
   prompt:
     title: Permitir acesso ao microfone?
-    description: O AIRI usa o microfone para entrada de voz e transcrição. Esta escolha vale até você redefini-la nas Configurações.
+    description: O app usa o microfone para entrada de voz e transcrição. Esta escolha vale até você redefini-la nas Configurações.
     allow: Permitir
     deny: Negar
   states:
@@ -13,10 +13,11 @@ microphone-permission:
     denied: Negado
   settings:
     title: Microfone
-    description: Controle se o AIRI pode usar o microfone. Redefinir esta escolha para o microfone agora e pergunta de novo na próxima vez.
+    description: Controle se o app pode usar o microfone. Redefinir esta escolha para o microfone agora e pergunta de novo na próxima vez.
     revoke: Tirar o acesso
     reset: Redefinir escolha
 spotlight:
+  placeholder: Pergunte pra {name}…
   errors:
     unknown: Erro desconhecido
     prefix: 'Algo deu errado: {message}'
@@ -30,9 +31,16 @@ pages:
     general:
       hide-app-icon:
         title: Esconder o ícone da barra de tarefas / Dock
-        description: Deixa o AIRI só na bandeja. Use o menu da bandeja para abrir janelas ou sair. As mudanças valem na hora.
+        description: Deixa o app só na bandeja. Use o menu da bandeja para abrir janelas ou sair. As mudanças valem na hora.
         load-error: Não foi possível carregar a configuração do ícone do app.
         save-error: Não foi possível atualizar a configuração do ícone do app.
+      edge-dock:
+        title: Esconder na esquerda
+        description: Ela fica escondida na borda esquerda; clique na setinha pra ela aparecer.
+        load-error: Não foi possível carregar a configuração da borda esquerda.
+        save-error: Não foi possível atualizar a configuração da borda esquerda.
+        show: Mostrar a {name}
+        hide: Esconder
     sections:
       section:
         window-shortcuts:
@@ -46,7 +54,7 @@ pages:
         description: Clique no atalho e aperte o atalho novo. Aperte Esc para cancelar.
       push-to-talk:
         title: Atalho de apertar para falar
-        description: Segure este atalho em qualquer app enquanto fala com o AIRI. Clique no atalho e aperte o atalho novo. Aperte Esc para cancelar.
+        description: Segure este atalho em qualquer app enquanto fala com a personagem. Clique no atalho e aperte o atalho novo. Aperte Esc para cancelar.
         inactive: Este atalho só funciona quando o modo de entrada da Audição é Apertar para falar e o microfone está ligado.
       actions:
         recording: Aperte as teclas
@@ -57,7 +65,7 @@ pages:
         failed: Não foi possível atualizar o atalho
         requiresModifier: Use pelo menos uma destas teclas, Cmd, Ctrl, Alt ou Super.
         requiresHoldModifier: Use Cmd, Ctrl, Alt ou Super, ou uma tecla de função como F13. Só o Shift não basta.
-        denied: O AIRI não consegue ler teclas globais. Permita o AIRI nas configurações de Acessibilidade e tente de novo.
+        denied: O app não consegue ler teclas globais. Permita o Waifus Redragon nas configurações de Acessibilidade e tente de novo.
         unsupported: Este sistema não consegue detectar quando você solta um atalho global.
       toggle-move:
         label: Ligar ou desligar mover
@@ -89,7 +97,7 @@ devtools:
       unread:
         title: Mensagens não lidas
         description: Aparece como um painel na cabeça, com uma marca e a contagem.
-      main-window-note: As mudanças aparecem na janela principal do AIRI.
+      main-window-note: As mudanças aparecem na janela principal do app.
     live2d-ambient-light:
       title: Luz ambiente do Live2D
       description: Ajuste a amostragem da tela e o shader de luz colorida do Live2D
@@ -117,10 +125,10 @@ devtools:
       squint:
         title: Apertar os olhos com mudança forte de brilho
         description: Fecha um pouco os olhos quando a tela clareia mais rápido do que a personagem se acostumou. Tela que fica clara deixa os olhos abertos. 0 desliga isto.
-      main-window-note: As mudanças aparecem na janela principal do AIRI.
+      main-window-note: As mudanças aparecem na janela principal do app.
       diagnostics:
         title: Diagnóstico da captura
-        waiting: Esperando o diagnóstico da janela principal do AIRI.
+        waiting: Esperando o diagnóstico da janela principal do app.
         status:
           disabled: Desligado
           starting: Iniciando
@@ -133,14 +141,14 @@ devtools:
           display: Monitor e limites
           video-size: Vídeo de origem
           sample-size: Quadro de amostra
-          window-bounds: Limites da janela do AIRI
+          window-bounds: Limites da janela do app
           excluded-region: Região excluída
           exposure: Exposição da tela
           behind-luminance: Luz atrás da personagem
           updated: Última atualização
         preview:
           title: Captura reduzida
-          description: O retângulo vermelho marca a janela do AIRI. O retângulo tracejado marca a área que os mapas de luz cobrem.
+          description: O retângulo vermelho marca a janela do app. O retângulo tracejado marca a área que os mapas de luz cobrem.
           unavailable: Nenhum quadro capturado disponível.
         pixels:
           title: Decisões por pixel
@@ -151,7 +159,7 @@ devtools:
           see-through: Vazados
         maps:
           title: Mapas de luz
-          window: Cada mapa cobre a janela do AIRI e meia janela em cada lado. O contorno marca a janela.
+          window: Cada mapa cobre a janela do app e meia janela em cada lado. O contorno marca a janela.
           unavailable: Nenhum ambiente disponível.
           target: Medido
           applied: Aplicado depois da suavização
@@ -214,7 +222,7 @@ devtools:
         filtered: Saída do shader
         unavailable: A prévia precisa de WebGL, e esta janela não conseguiu criar um contexto.
         environment:
-          live: A luz vem do último retrato que a janela principal do AIRI publicou.
+          live: A luz vem do último retrato que a janela principal do app publicou.
           neutral: Nenhum retrato chegou ainda, então a prévia usa o ambiente neutro.
         regions:
           title: Regiões do cartão de teste
@@ -222,8 +230,8 @@ devtools:
           bars: As barras têm {first}, {second}, {third}, {fourth} e {fifth} pixels de largura. Mostram até onde o contorno de luz entra numa forma fina.
           patches: Os dois quadrados são desenhados com alfa {strong} e {weak}, que é onde a opção de contorno translúcido age.
     editor:
-      title: Editor do AIRI
-      description: Abre a janela separada do Editor do AIRI
+      title: Editor do Waifus Redragon
+      description: Abre a janela separada do Editor
       button: Abrir editor
     lag-visualizer:
       title: Visualizador de atraso
@@ -295,7 +303,7 @@ devtools:
         reset-view: Redefinir visão
         export-project: Exportar projeto
         import-project: Importar projeto
-        import-error: Este arquivo não é um projeto de movimento Live2D do AIRI válido.
+        import-error: Este arquivo não é um projeto de movimento Live2D válido.
         playback:
           label: Controles da linha do tempo
           start: Ir para o início
@@ -477,7 +485,7 @@ devtools:
           recording: Gravando movimento
           playing: Tocando movimento
           ready: '{count} amostras · {duration}'
-        import-error: Este arquivo não é uma gravação de movimento Live2D do AIRI válida.
+        import-error: Este arquivo não é uma gravação de movimento Live2D válida.
     performance-visualizer:
       title: Visualizador de desempenho
       description: Confira métricas de desempenho ao vivo e diagnósticos de execução
@@ -554,5 +562,5 @@ screen-capture:
     dismiss: Dispensar
     instructions:
       step-1: Abra os "Ajustes do Sistema" e escolha "Privacidade e Segurança" na barra lateral.
-      step-2: Nas seções "Gravação de Tela e Áudio do Sistema" e "Somente Gravação de Áudio do Sistema", ligue as chaves do AIRI.
-      step-2-note: Se o AIRI não aparecer na lista, adicione manualmente pelo botão "+" e escolha o AIRI na pasta Aplicativos.
+      step-2: Nas seções "Gravação de Tela e Áudio do Sistema" e "Somente Gravação de Áudio do Sistema", ligue as chaves do Waifus Redragon.
+      step-2-note: Se o Waifus Redragon não aparecer na lista, adicione manualmente pelo botão "+" e escolha o Waifus Redragon na pasta Aplicativos.

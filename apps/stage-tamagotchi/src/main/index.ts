@@ -17,7 +17,7 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { Format, LogLevel, setGlobalFormat, setGlobalHookPostLog, setGlobalLogLevel, useLogg } from '@guiiai/logg'
 import { createContext } from '@moeru/eventa/adapters/electron/main'
 import { hasSelectedScreenCaptureSource, initScreenCaptureForMain } from '@proj-airi/electron-screen-capture/main'
-import { app, ipcMain, protocol, session } from 'electron'
+import { app, ipcMain, nativeTheme, protocol, session } from 'electron'
 import { noop } from 'es-toolkit'
 import { createLoggLogger, injeca, lifecycle } from 'injeca'
 import { isLinux } from 'std-env'
@@ -57,6 +57,7 @@ import { setupCaptionWindowManager } from './windows/caption'
 import { setupChatWindowManager } from './windows/chat'
 import { isDesktopOverlayEnabled, setupDesktopOverlayWindow } from './windows/desktop-overlay'
 import { setupDevtoolsWindow } from './windows/devtools'
+import { EdgeDock, isEdgeDockSupported } from './windows/edge-dock'
 import { setupEditorWindowManager } from './windows/editor'
 import { setupInlayWindowReusable } from './windows/inlay'
 import { setupMainWindow } from './windows/main'
@@ -171,6 +172,10 @@ let openFullscreenInMainWindow: ((surface: FullscreenSurfaceId, route?: string) 
 let mainWindowPlace: FullscreenPlace | undefined
 /** Keeps the main window above the others, for the window of the `multi-window` mode that covers the screen under it. */
 let keepMainWindowAbove: ((above: boolean) => void) | undefined
+/** The left edge dock of the main window, once it exists. The main window asks it from its hooks. */
+let mainWindowEdgeDock: EdgeDock | undefined
+/** Whether the fullscreen mode of the main window is on. The edge dock waits while it is. */
+let mainWindowFullscreen = false
 let extensionManagementWebContentsId: number | undefined
 
 /** Opens settings where the fullscreen mode says: in the main window, in the window of the `multi-window` mode, or in the settings window. */
@@ -245,6 +250,10 @@ app.whenReady().then(async () => {
     return
   }
 
+  // NOTICE: Waifus Redragon is dark by the owner's order, also in the parts that
+  // Windows draws (title bars, menus, scroll bars), whatever the system theme is.
+  nativeTheme.themeSource = 'dark'
+
   setupSherpawModelAssetsProtocol(resolve(getElectronMainDirname(), '..', 'renderer'))
   setupSherpawModelAssets(createContext(ipcMain).context)
   setupPermissionHandlers(session.defaultSession, hasSelectedScreenCaptureSource)
@@ -269,7 +278,7 @@ app.whenReady().then(async () => {
     dependsOn: { appConfig },
     build: ({ dependsOn }) => setupAutoUpdater({
       // NOTICE: desligado como na versão da Steam. O atualizador do AIRI procura versão nova nas releases
-      // da moeru-ai e passa por cima de qualquer feed nosso: trocaria a Carmen e a Violet pelo AIRI original.
+      // da moeru-ai e passa por cima de qualquer feed nosso: trocaria a Ruby e a Violet pelo AIRI original.
       // Versão nova sai pela página da Integraction.
       enabled: false,
       getStoredUpdateLane: () => dependsOn.appConfig.get()?.updateChannel,
@@ -432,9 +441,14 @@ app.whenReady().then(async () => {
   })
 
   const mainWindow = injeca.provide('windows:main', {
-    dependsOn: { editorWindow, settingsWindow, workspaceWindow, chatWindow, widgetsManager, noticeWindow, beatSync, autoUpdater, serverChannel, godotStageManager, mcpManager, i18n, onboardingWindowManager, inlayWindow, appleSpeechTranscription, appleVision, ioTraceRecording, globalShortcut, spotlightWindow, devtoolsWindow: devtoolsMarkdownStressWindow },
-    build: async ({ dependsOn }) => setupMainWindow({
+    dependsOn: { editorWindow, settingsWindow, workspaceWindow, chatWindow, widgetsManager, noticeWindow, beatSync, autoUpdater, serverChannel, godotStageManager, mcpManager, i18n, onboardingWindowManager, inlayWindow, appleSpeechTranscription, appleVision, ioTraceRecording, globalShortcut, spotlightWindow, devtoolsWindow: devtoolsMarkdownStressWindow, appConfig },
+    build: async ({ dependsOn: { appConfig: mainAppConfig, ...dependsOn } }) => setupMainWindow({
       ...dependsOn,
+      edgeDock: {
+        startsTucked: mainAppConfig.get()?.edgeDock === true && isEdgeDockSupported(),
+        ownsBounds: () => mainWindowEdgeDock?.ownsBounds() === true,
+        tuckOnClose: () => mainWindowEdgeDock?.tuckOnClose() === true,
+      },
       onWindowCreated: (window) => {
         userFacingMainWindow = window
       },
@@ -450,6 +464,9 @@ app.whenReady().then(async () => {
           extensionManagementWebContentsId = mainWindowId
         else if (extensionManagementWebContentsId === mainWindowId)
           extensionManagementWebContentsId = undefined
+        // A fullscreen window is never docked at the edge.
+        mainWindowFullscreen = active
+        mainWindowEdgeDock?.setSuspended(active)
       },
       onKeepAbove: (keepAbove) => {
         keepMainWindowAbove = keepAbove
@@ -472,8 +489,25 @@ app.whenReady().then(async () => {
     build: async ({ dependsOn }) => setupCaptionWindowManager(dependsOn),
   })
 
+  const edgeDock = injeca.provide('windows:edge-dock', {
+    dependsOn: { mainWindow, captionWindow, appConfig, i18n },
+    build: ({ dependsOn }) => {
+      try {
+        mainWindowEdgeDock = new EdgeDock({ ...dependsOn, isFullscreen: () => mainWindowFullscreen })
+        return mainWindowEdgeDock
+      }
+      catch (error) {
+        // The main window waits for the dock when it starts tucked. Without the dock, it shows as before.
+        log.withError(error).error('Failed to set up the edge dock')
+        if (!dependsOn.mainWindow.isDestroyed())
+          dependsOn.mainWindow.show()
+        return undefined
+      }
+    },
+  })
+
   const tray = injeca.provide('app:tray', {
-    dependsOn: { mainWindow, settingsWindow, captionWindow, widgetsWindow: widgetsManager, serverChannel, beatSyncBgWindow: beatSync, aboutWindow, inlayWindow, i18n, appConfig },
+    dependsOn: { mainWindow, settingsWindow, captionWindow, widgetsWindow: widgetsManager, serverChannel, beatSyncBgWindow: beatSync, aboutWindow, inlayWindow, i18n, appConfig, edgeDock },
     build: async ({ dependsOn }) => setupTray(dependsOn),
   })
 

@@ -19,7 +19,7 @@ export const PT_BR_VOICES = {
   pf_dora: { name: 'Dora', language: 'pt-br', gender: 'Female' },
   pm_alex: { name: 'Alex', language: 'pt-br', gender: 'Male' },
   pm_santa: { name: 'Santa', language: 'pt-br', gender: 'Male' },
-  carmen: { name: 'Carmen', language: 'pt-br', gender: 'Female' },
+  ruby: { name: 'Ruby', language: 'pt-br', gender: 'Female' },
   violet: { name: 'Violet', language: 'pt-br', gender: 'Female' },
 } as const satisfies Voices
 
@@ -29,7 +29,8 @@ const VOICE_URLS: Record<PtBrVoiceKey, string> = {
   pf_dora: pfDoraUrl,
   pm_alex: pmAlexUrl,
   pm_santa: pmSantaUrl,
-  carmen: carmenUrl,
+  // The Ruby preset keeps the file name from when she was called Carmen.
+  ruby: carmenUrl,
   violet: violetUrl,
 }
 
@@ -39,7 +40,7 @@ export const PT_BR_VOICE_SPEED: Record<PtBrVoiceKey, number> = {
   pf_dora: 1,
   pm_alex: 1,
   pm_santa: 1,
-  carmen: 0.9,
+  ruby: 0.9,
   violet: 1.05,
 }
 

@@ -3,21 +3,18 @@ import type { Card } from '@proj-airi/ccc'
 import type { WakeWord } from '../../libs/voice/wake-words'
 import type { AiriExtension } from '../../types/airiCard'
 
-import { getCachedWebGPUCapabilities } from '@proj-airi/stage-shared/webgpu'
-
-import { getDefaultKokoroModel } from '../../workers/kokoro/constants'
 import { REDRAGON_WAKE_WORDS } from './airi-card-redragon-wake-words'
 
 /**
- * Carmen and Violet, the Redragon characters that ship with this build.
+ * Ruby and Violet, the Redragon characters that ship with this build.
  *
- * Carmen replaces ReLU as the `default` card. Violet is a second built-in card
+ * Ruby replaces ReLU as the `default` card. Violet is a second built-in card
  * that initialization adds when it is missing, so a user who deletes her gets
  * her back on the next start, like the `default` card.
  */
 export const REDRAGON_VIOLET_CARD_ID = 'redragon-violet'
 
-export type RedragonCharacter = 'carmen' | 'violet'
+export type RedragonCharacter = 'ruby' | 'violet'
 
 // NOTICE: the dash rule is part of the prompt on purpose. Visible text from
 // these characters must never use the long dash, and the model only follows
@@ -38,15 +35,15 @@ interface Persona {
 }
 
 const PERSONAS: Record<RedragonCharacter, Persona> = {
-  carmen: {
-    name: 'Carmen',
-    systemPrompt: `Você é a Carmen, mascote da Redragon. Tom calmo, sonolento e seco. ${RULES}`,
+  ruby: {
+    name: 'Ruby',
+    systemPrompt: `Você é a Ruby, mascote da Redragon. Tom calmo, sonolento e seco. ${RULES}`,
     description: 'Mascote da Redragon em chibi: cabelo prateado liso e pesado, chifres pretos e vermelhos varridos pra trás, '
       + 'olhos vermelhos, vestido gótico preto de gola alta com fio dourado e um espadão demoníaco.',
     personality: 'Calma e sonolenta, fala pouco e baixo, humor seco. Acorda de vez quando o assunto é setup gamer ou partida difícil. '
       + 'Leal a quem joga com ela.',
     scenario: 'Fica no canto da tela de quem joga: comenta a partida, conversa e ajuda com dúvida de periférico.',
-    greeting: 'Hm... ah, oi. Eu sou a Carmen. Tava cochilando em cima do seu teclado. Bora jogar?',
+    greeting: 'Hm... ah, oi. Eu sou a Ruby. Tava cochilando em cima do seu teclado. Bora jogar?',
   },
   violet: {
     name: 'Violet',
@@ -60,15 +57,9 @@ const PERSONAS: Record<RedragonCharacter, Persona> = {
 }
 
 const DISPLAY_MODEL_IDS: Record<RedragonCharacter, string> = {
-  carmen: 'preset-vrm-carmen',
+  // Ruby was called Carmen before 21/10/2026; her 3D body keeps that file and id.
+  ruby: 'preset-vrm-carmen',
   violet: 'preset-vrm-violet',
-}
-
-/** The Kokoro model that the provider config picks on this device, so the voice catalog accepts the card's choice. */
-function deviceKokoroModel() {
-  const capabilities = getCachedWebGPUCapabilities()
-  const supported = capabilities?.supported ?? (typeof navigator !== 'undefined' && Boolean(navigator.gpu))
-  return getDefaultKokoroModel(supported, capabilities?.fp16Supported ?? false)
 }
 
 /** The card of one Redragon character, before the user edits it. */
@@ -97,10 +88,11 @@ export function redragonCard(character: RedragonCharacter): Card & { extensions:
           config: {},
         }],
         modules: {
-          // The user brings the chat provider. Speech starts on the bundled
-          // pt-BR Kokoro preset, which runs on the device and costs nothing.
+          // The access code points chat, voice and hearing at the Integraction
+          // bridge. Each character speaks with her own ElevenLabs voice there;
+          // the bundled pt-BR Kokoro voices stay available in the settings.
           consciousness: { provider: '', model: '' },
-          speech: { provider: 'kokoro-local', model: deviceKokoroModel(), voice_id: character },
+          speech: { provider: 'elevenlabs', model: 'eleven_flash_v2_5', voice_id: character },
           vision: { provider: '', model: '' },
         },
         agents: {},

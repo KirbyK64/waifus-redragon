@@ -4,7 +4,7 @@ character-switcher:
   empty: Nenhuma personagem ainda
   failed: Não foi possível trocar de personagem. Tente de novo.
 mobile-tools:
-  sign-in: Entrar no AIRI
+  sign-in: Entrar na conta
   account-description: Conta e preferências
   sound: Som
   character-voice: Voz da personagem
@@ -55,7 +55,7 @@ chat:
     system-default: Padrão do sistema
     listen: Ouvir o tempo todo
     push-to-talk: Apertar para falar
-    push-to-talk-unavailable: Este aparelho não tem tecla de Apertar para falar, então o AIRI não está ouvindo. Mude o modo de entrada nas configurações de Audição.
+    push-to-talk-unavailable: Este aparelho não tem tecla de Apertar para falar, então o app não está ouvindo. Mude o modo de entrada nas configurações de Audição.
     wake-word: Ouvir as palavras de ativação
     hearing-settings: Mais configurações de Audição…
     options-hint: Passe o mouse ou clique com o botão direito para ver as opções
@@ -188,7 +188,7 @@ chat:
     stop: Parar resposta
   message:
     character-name:
-      airi: AIRI
+      airi: Ruby
       core-system: Sistema central
       you: Você
   reply:
@@ -350,7 +350,7 @@ computer-use:
 status:
   preparing: Preparando o microfone
   listening: Ouvindo
-  paused: Escuta pausada enquanto o AIRI fala
+  paused: Escuta pausada enquanto a personagem fala
   transcribing: Transcrevendo
   hearing-error: Não foi possível transcrever o áudio
   no-transcript: A fala reconhecida aparece aqui.

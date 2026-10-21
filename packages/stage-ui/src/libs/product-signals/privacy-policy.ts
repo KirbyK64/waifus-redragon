@@ -1,17 +1,7 @@
-import { localeRemap } from '@proj-airi/i18n'
-
-const supportedPrivacyPolicyLocales = new Set([
-  'en',
-  'ja',
-  'zh-Hans',
-])
+import { AIRI_PRIVACY_URL } from '../../constants/public-links'
 
 /** Returns the privacy policy URL for the requested UI locale. */
-export function getAnalyticsPrivacyPolicyUrl(locale?: string): string {
-  const normalizedLocale = localeRemap[locale ?? 'en'] ?? locale ?? 'en'
-  const docsLocale = supportedPrivacyPolicyLocales.has(normalizedLocale)
-    ? normalizedLocale
-    : 'en'
-
-  return `https://airi.moeru.ai/docs/${docsLocale}/about/privacy`
+export function getAnalyticsPrivacyPolicyUrl(_locale?: string): string {
+  // NOTICE: Waifus Redragon has one privacy page in pt-BR, so the locale does not change the URL.
+  return AIRI_PRIVACY_URL
 }

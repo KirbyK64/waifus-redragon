@@ -73,7 +73,7 @@ async function classifyWindow(page: Page): Promise<StageWindowSnapshot | null> {
     return { name: 'settings', page, title, route }
   }
 
-  if (route.startsWith('/onboarding') || title === 'Welcome to AIRI') {
+  if (route.startsWith('/onboarding') || title === 'Boas-vindas ao Waifus Redragon') {
     return null
   }
 

@@ -8,6 +8,7 @@ import semver from 'semver'
 import { useElectronAutoUpdater, useElectronEventaInvoke } from '@proj-airi/electron-vueuse'
 import { AboutContent, BugReportDialog, createBugReportPageContext, MarkdownRenderer } from '@proj-airi/stage-ui/components'
 import { useAnalytics, useBreakpoints, useBuildInfo } from '@proj-airi/stage-ui/composables'
+import { WAIFUS_HOME_URL, WAIFUS_SOURCE_URL } from '@proj-airi/stage-ui/constants/public-links'
 import { Button, ContainerError, DoubleCheckButton, FieldSelect, Progress, ScrollableArea } from '@proj-airi/ui'
 import { useClipboard } from '@vueuse/core'
 import { DialogContent, DialogDescription, DialogOverlay, DialogPortal, DialogRoot, DialogTitle } from 'reka-ui'
@@ -63,11 +64,13 @@ const { isDesktop } = useBreakpoints()
 const updateChannelOptions = ['auto', 'latest', 'stable', 'alpha', 'beta', 'nightly', 'canary'] as const
 type UpdateChannelOption = typeof updateChannelOptions[number]
 const updateChannelSelectOptions = computed(() => updateChannelOptions.map(channel => ({
-  label: channel === 'latest'
-    ? 'Latest (any release)'
-    : t(`tamagotchi.stage.about.update.channels.${channel}`),
+  label: t(`tamagotchi.stage.about.update.channels.${channel}`),
   value: channel,
 })))
+const aboutLinks = computed(() => [
+  { label: t('tamagotchi.stage.about.links.home'), href: WAIFUS_HOME_URL, icon: 'i-solar:home-smile-outline' },
+  { label: t('tamagotchi.stage.about.links.source'), href: WAIFUS_SOURCE_URL, icon: 'i-simple-icons:github' },
+])
 const selectedUpdateChannel = ref<UpdateChannelOption>('auto')
 const isUpdateChannelUpdating = ref(false)
 const bugReportDescription = ref('')
@@ -241,9 +244,11 @@ onMounted(() => {
   >
     <div :class="['mx-auto max-w-[min(960px,calc(100%-2rem))]', 'p-6']">
       <AboutContent
-        title="Project"
-        highlight="AIRI"
+        title="Waifus"
+        highlight="Redragon"
         :subtitle="t('tamagotchi.stage.about.subtitle')"
+        :links="aboutLinks"
+        :links-title="t('tamagotchi.stage.about.links.title')"
       >
         <template #before-build-info>
           <!-- Main Content Card -->
@@ -293,9 +298,9 @@ onMounted(() => {
                 v-if="requiresWindowsAdminUpdatePrompt"
                 :class="['text-sm rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-amber-700 dark:text-amber-200']"
               >
-                AIRI is installed in a protected Windows folder. Update install may require a UAC admin prompt.
+                {{ t('tamagotchi.stage.about.update.notices.protected-folder') }}
                 <div :class="['mt-1 text-xs break-all text-amber-700/80 dark:text-amber-100/80']">
-                  Path: {{ updateInstallDirectory }}
+                  {{ t('tamagotchi.stage.about.update.notices.path', { path: updateInstallDirectory }) }}
                 </div>
               </div>
 
@@ -310,7 +315,7 @@ onMounted(() => {
                   v-if="isDowngradeUpdate"
                   :class="['text-sm rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-amber-700 dark:text-amber-200']"
                 >
-                  Selected channel offers an older build than your current version. Installing this update will downgrade AIRI.
+                  {{ t('tamagotchi.stage.about.update.notices.downgrade-available') }}
                 </div>
                 <div>
                   <Button
@@ -344,7 +349,7 @@ onMounted(() => {
                   v-if="isDowngradeUpdate"
                   :class="['text-sm rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-amber-700 dark:text-amber-200']"
                 >
-                  Downgrade package downloaded from selected channel. Restart will install an older version.
+                  {{ t('tamagotchi.stage.about.update.notices.downgrade-downloaded') }}
                 </div>
                 <div>
                   <DoubleCheckButton
@@ -400,6 +405,11 @@ onMounted(() => {
                 </div>
               </div>
             </div>
+          </div>
+        </template>
+        <template #after-links>
+          <div :class="['mb-10 text-center text-xs text-neutral-500 dark:text-neutral-400']">
+            {{ t('tamagotchi.stage.about.credit') }}
           </div>
         </template>
       </AboutContent>

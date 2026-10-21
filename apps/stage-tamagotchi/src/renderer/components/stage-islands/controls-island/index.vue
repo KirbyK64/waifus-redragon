@@ -8,13 +8,12 @@ import { useSettings, useSettingsAudioDevice } from '@proj-airi/stage-ui/stores/
 import { Badge, IconButton, ScrollableArea, useTheme } from '@proj-airi/ui'
 import { refDebounced, useFocusWithin, useIntervalFn, useMouseInElement, useMousePressed, useNow } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import { computed, nextTick, reactive, ref, useId, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onScopeDispose, reactive, ref, useId, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import StatusIsland from '../status-island/index.vue'
 import ControlButtonTooltip from './control-button-tooltip.vue'
 import ControlButton from './control-button.vue'
-import ControlsIslandAuthButton from './controls-island-auth-button.vue'
 import ControlsIslandChatButton from './controls-island-chat-button.vue'
 import ControlsIslandFadeOnHover from './controls-island-fade-on-hover.vue'
 import ControlsIslandProfilePicker from './controls-island-profile-picker.vue'
@@ -25,6 +24,9 @@ import {
   electron,
   electronAppQuit,
   electronCenterMainWindow,
+  electronEdgeDockGetState,
+  electronEdgeDockStateChanged,
+  electronEdgeDockToggle,
   electronOpenSettings,
   electronStartDraggingWindow,
   electronWindowSetAlwaysOnTop,
@@ -80,6 +82,19 @@ const isLinux = useElectronEventaInvoke(electron.app.isLinux)
 const quitApp = useElectronEventaInvoke(electronAppQuit)
 const setAlwaysOnTop = useElectronEventaInvoke(electronWindowSetAlwaysOnTop)
 const centerMainWindow = useElectronEventaInvoke(electronCenterMainWindow)
+const getEdgeDockState = useElectronEventaInvoke(electronEdgeDockGetState)
+const toggleEdgeDock = useElectronEventaInvoke(electronEdgeDockToggle)
+
+// While the edge dock is on, she lives at the left edge. The center button then tucks her there instead.
+const edgeDockEnabled = ref(false)
+getEdgeDockState()
+  .then((state) => {
+    edgeDockEnabled.value = state?.enabled === true
+  })
+  .catch(error => console.warn('Failed to read the edge dock state:', error))
+onScopeDispose(context.value.on(electronEdgeDockStateChanged, (event) => {
+  edgeDockEnabled.value = event?.body?.enabled === true
+}))
 
 const expanded = ref(false)
 // The store also polls the unread count, so the collapse button can show a dot while the menu is closed.
@@ -343,6 +358,11 @@ function refreshWindow() {
 function resetMainWindowPosition() {
   centerMainWindow().catch(console.error)
 }
+
+/** Slides the character out to the left edge. The tab there brings her back. */
+function tuckToEdge() {
+  toggleEdgeDock().catch(console.error)
+}
 </script>
 
 <template>
@@ -426,14 +446,10 @@ function resetMainWindowPosition() {
                 </div>
                 <!-- v-show keeps dialogs and listeners of the controls mounted while the list shows. -->
                 <div v-show="menuView === 'controls'" :class="['flex flex-col gap-1']">
-                  <ControlsIslandAuthButton
-                    :active="expanded"
-                    :button-style="adjustStyleClasses.button"
-                    :icon-class="adjustStyleClasses.icon"
-                  />
+                  <!-- Waifus Redragon: no AIRI account sign-in. The Integraction access code covers chat, voice and hearing. -->
 
                   <!--
-                    The same Notifications row as the mobile menu. It is a plain button like the account card above,
+                    The same Notifications row as the mobile menu. It is a plain button,
                     because BasicButton centers its content and does not suit a full-width row.
                   -->
                   <button
@@ -508,7 +524,20 @@ function resetMainWindowPosition() {
                       </template>
                     </ControlButtonTooltip>
 
-                    <ControlButtonTooltip disable-hoverable-content>
+                    <ControlButtonTooltip v-if="edgeDockEnabled" disable-hoverable-content>
+                      <!-- No `v-track-button`: its action names are a closed list in stage-ui, and this fork adds none there. -->
+                      <ControlButton
+                        :button-style="adjustStyleClasses.button"
+                        :aria-label="t('tamagotchi.settings.pages.system.general.edge-dock.title')"
+                        @click="tuckToEdge"
+                      >
+                        <div :class="['i-solar:alt-arrow-left-linear text-neutral-800 dark:text-neutral-300', adjustStyleClasses.icon]" />
+                      </ControlButton>
+                      <template #tooltip>
+                        {{ t('tamagotchi.settings.pages.system.general.edge-dock.title') }}
+                      </template>
+                    </ControlButtonTooltip>
+                    <ControlButtonTooltip v-else disable-hoverable-content>
                       <ControlButton
                         v-track-button="{ name: 'controls_island_action', action: 'center_main_window' }"
                         :button-style="adjustStyleClasses.button"

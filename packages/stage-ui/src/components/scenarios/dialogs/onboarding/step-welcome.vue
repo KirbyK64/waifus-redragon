@@ -8,7 +8,7 @@ import { DropdownMenuItem } from 'reka-ui'
 import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import onboardingLogo from '../../../../assets/onboarding.avif'
+import onboardingLogo from '../../../../assets/onboarding-waifus.webp'
 
 import { AIRI_FLUX_URL, AIRI_TERMS_URL } from '../../../../constants/public-links'
 import { useAuthStore } from '../../../../stores/auth'

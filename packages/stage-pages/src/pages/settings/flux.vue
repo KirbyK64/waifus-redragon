@@ -736,9 +736,6 @@ async function handleBuy(stripePriceId: string) {
       <a :href="AIRI_PRIVACY_URL" target="_blank" rel="noreferrer" hover:text-primary-500>
         {{ t('settings.pages.flux.privacy') }}
       </a>
-      <a href="mailto:airi@moeru.ai" hover:text-primary-500>
-        airi@moeru.ai
-      </a>
     </div>
   </div>
 </template>

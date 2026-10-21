@@ -786,7 +786,7 @@ export const useAiriCardStore = defineStore('airi-card', () => {
    * with the same id, so synchronization compares a device's card with it to
    * find the edits of the user.
    */
-  const builtInCard = computed(() => newAiriCard(redragonCard('carmen')))
+  const builtInCard = computed(() => newAiriCard(redragonCard('ruby')))
 
   /** The built-in card in every language. Only its parts that differ from all of them are edits. */
   const builtInVariants = computed(() => {

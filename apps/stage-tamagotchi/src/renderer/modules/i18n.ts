@@ -7,8 +7,9 @@ function getLocale() {
   let language = localStorage.getItem('settings/language')
 
   if (!language) {
-    // Fallback to browser language
-    language = navigator.language || 'en'
+    // NOTICE: Waifus Redragon is for a Brazilian team, so it starts in pt-BR
+    // whatever the system language is. A language that the user picks still wins.
+    language = 'pt-BR'
   }
 
   return resolveSupportedLocale(language, Object.keys(messages!))
