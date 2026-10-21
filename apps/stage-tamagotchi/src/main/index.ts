@@ -154,7 +154,9 @@ if (isLinux) {
 // Dev runs use the Electron default icon, so replace it with a marked dev icon.
 if (is.dev)
   app.dock?.setIcon(devIcon)
-electronApp.setAppUserModelId('ai.moeru.airi')
+// NOTICE: o mesmo appId do electron-builder. Com o do AIRI, o Windows junta as duas na barra de tarefas
+// e as notificações saem com o nome deles.
+electronApp.setAppUserModelId('br.com.integraction.waifus')
 
 // Track the real user-facing AIRI window because the process also owns hidden utility windows.
 // The second-instance handler should restore the main UI instead of accidentally surfacing internals.
@@ -266,7 +268,10 @@ app.whenReady().then(async () => {
   const autoUpdater = injeca.provide('services:auto-updater', {
     dependsOn: { appConfig },
     build: ({ dependsOn }) => setupAutoUpdater({
-      enabled: import.meta.env.VITE_DISTRIBUTION !== 'steam',
+      // NOTICE: desligado como na versão da Steam. O atualizador do AIRI procura versão nova nas releases
+      // da moeru-ai e passa por cima de qualquer feed nosso: trocaria a Carmen e a Violet pelo AIRI original.
+      // Versão nova sai pela página da Integraction.
+      enabled: false,
       getStoredUpdateLane: () => dependsOn.appConfig.get()?.updateChannel,
       setStoredUpdateLane: (lane) => {
         const currentConfig = dependsOn.appConfig.get()
