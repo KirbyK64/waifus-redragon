@@ -12,7 +12,8 @@ const relato = []
 const nota = (s) => { console.log(s); relato.push(s) }
 const espera = ms => new Promise(r => setTimeout(r, ms))
 const PORTA = 9333
-const NOME = 'Waifus Redragon.exe'
+// NOTICE: o nome do exe vem do executableName do electron-builder (waifus-redragon.exe), não do productName
+const NOME = /^waifus.*\.exe$/i
 
 function tela(nome) {
   try {
@@ -30,9 +31,13 @@ function acha() {
     try { nomes = readdirSync(raiz) }
     catch { continue }
     for (const n of nomes.filter(n => /waifus/i.test(n))) {
-      const p = join(raiz, n, NOME)
-      if (existsSync(p))
-        return p
+      let dentro = []
+      try { dentro = readdirSync(join(raiz, n)) }
+      catch { continue }
+      nota(`pasta ${join(raiz, n)}: ${dentro.join(', ')}`)
+      const exe = dentro.find(f => NOME.test(f))
+      if (exe)
+        return join(raiz, n, exe)
     }
   }
   return null
@@ -44,11 +49,10 @@ async function main() {
   let t0 = Date.now()
   const inst = spawnSync(setup, ['/S'], { stdio: 'inherit' })
   nota(`instalador /S: saiu com ${inst.status} em ${Math.round((Date.now() - t0) / 1000)} s`)
-  spawnSync('taskkill', ['/IM', NOME, '/F'], { stdio: 'ignore' })
-
   const exe = acha()
   if (!exe)
-    throw new Error(`não achei ${NOME} depois de instalar`)
+    throw new Error('não achei o exe do app depois de instalar')
+  spawnSync('taskkill', ['/IM', exe.split('\\').pop(), '/F'], { stdio: 'ignore' })
   nota(`instalado em: ${exe}`)
   const atalhos = [join(process.env.USERPROFILE, 'Desktop'), join(process.env.PUBLIC ?? 'C:\\Users\\Public', 'Desktop')].map(d => join(d, 'Waifus Redragon.lnk'))
   nota(`atalho na área de trabalho: ${atalhos.some(a => existsSync(a)) ? 'sim' : 'não'}`)
