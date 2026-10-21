@@ -1286,7 +1286,7 @@ pages:
       choose-file: 'Choose an image'
       preview: 'Sticker preview'
       name: 'Name'
-      name-limit: 'Use 1–80 characters. The model reads this name.'
+      name-limit: 'Use 1 to 80 characters. The model reads this name.'
       emotions: 'Emotion tags'
       save: 'Save sticker'
       cancel: 'Cancel'
@@ -1297,7 +1297,7 @@ pages:
       history-note: 'Deleting or replacing a sticker affects future replies. Saved and already prepared replies keep their original image.'
       saved-image: 'Saved sticker'
       errors:
-        name: 'Enter a name with 1–80 characters.'
+        name: 'Enter a name with 1 to 80 characters.'
         emotions: 'Choose at least one valid emotion tag.'
         format: 'Choose a PNG, JPG, WebP, or GIF image.'
         size: 'Choose an image smaller than 2 MB.'
@@ -1541,7 +1541,7 @@ pages:
       description: Configure MCP servers and bring their tools into Waifus Redragon.
       config-path: Config file
       runtime-title: Runtime status
-      empty: No MCP servers yet — click "Add server" below to create one, or paste a config via "Edit JSON".
+      empty: No MCP servers yet. Click "Add server" below to create one, or paste a config via "Edit JSON".
       error-title: Oops
       success-title: Done!
       existing:
@@ -1550,7 +1550,7 @@ pages:
         empty: Nothing here yet. Add one below!
       add:
         title: New
-        description: "Fill in a new server, then click \"Save and restart\" — it'll move into \"Configured\" above."
+        description: "Fill in a new server, then click \"Save and restart\": it'll move into \"Configured\" above."
         pending-badge: Unsaved
       status:
         unknown: not loaded
@@ -1619,7 +1619,7 @@ pages:
         pick-server-label: Server
         no-servers: Nothing to test yet
         no-server-selected: Pick a server first.
-        server-disabled: '"{name}" is disabled — enable it on the card first.'
+        server-disabled: '"{name}" is disabled. Enable it on the card first.'
         disabled-suffix: disabled
         untitled: untitled
         running: Testing…
@@ -1627,11 +1627,11 @@ pages:
         failure: Connection failed after {ms}ms
       errors:
         empty-identifier: Server # {index} is missing an identifier.
-        duplicate-identifier: Identifier "{name}" is used more than once — names need to be unique.
+        duplicate-identifier: Identifier "{name}" is used more than once. Names need to be unique.
         empty-command: '"{name}" is missing a command.'
         empty-url: '"{name}" is missing a URL.'
         invalid-url: '"{name}" needs an absolute http or https URL.'
-        invalid-shape: That doesn't look like a valid mcp.json — the root needs an "mcpServers" field.
+        invalid-shape: That doesn't look like a valid mcp.json. The root needs an "mcpServers" field.
       messages:
         opened: Opened {path} in your file manager
         json-applied: JSON applied to the form. Click "Save and restart" to persist it to disk.
@@ -2283,7 +2283,7 @@ pages:
         description: Volcengine Coding Plan
         models:
           ark-code-latest:
-            description: Uses the model selected in the Coding Plan console, including Auto; changes apply in 3–5 minutes.
+            description: Uses the model selected in the Coding Plan console, including Auto; changes apply in 3 to 5 minutes.
           legacy:
             description: Legacy Coding Plan model scheduled for retirement. Switch to a currently supported model.
         title: Volcengine Coding Plan
