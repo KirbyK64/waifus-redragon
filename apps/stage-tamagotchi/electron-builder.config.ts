@@ -43,7 +43,7 @@ else {
 export default {
   appId: 'br.com.integraction.waifus',
   productName: 'Waifus Redragon',
-  copyright: 'Copyright © 2026 Integraction',
+  copyright: 'Copyright © 2026 Redragon',
   directories: {
     output: 'dist',
     buildResources: 'build',
@@ -128,6 +128,8 @@ export default {
   extraMetadata: {
     name: 'waifus-redragon',
     productName: 'Waifus Redragon',
+    // The Waifus version, the one on the release and on the page. The package keeps the AIRI version it came from.
+    version: '0.3.0',
     main: 'out/main/index.js',
     homepage: 'https://pm.solidpower.com.br/waifus-redragon/',
     repository: 'https://github.com/KirbyK64/waifus-redragon',
@@ -263,7 +265,7 @@ export default {
     },
     category: 'Utility',
     synopsis: 'Ruby e Violet, as mascotes da Redragon, no seu PC.',
-    description: 'Waifus Redragon: Ruby e Violet, as mascotes da Redragon, no seu PC. Feito pela Integraction sobre o AIRI, de código aberto (licença MIT).',
+    description: 'Waifus Redragon: Ruby e Violet, as mascotes da Redragon, no seu PC. Feito sobre o AIRI, de código aberto (licença MIT).',
     executableName: 'waifus-redragon',
     artifactName: '${productName}-${version}-linux-${arch}.${ext}',
     icon: 'build/icons/icon.png',

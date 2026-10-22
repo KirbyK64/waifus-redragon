@@ -1,73 +1,55 @@
 <script setup lang="ts">
 import type { ActivationCheck } from '../composables/use-waifus-activation'
 
-import { computed, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import duoArt from '../assets/waifus/duo.webp'
 
-import { checkActivationCode, normalizeActivationCode, useWaifusActivation } from '../composables/use-waifus-activation'
+import { checkActivationCode, useWaifusActivation, WAIFUS_APP_CODE } from '../composables/use-waifus-activation'
 
 const emit = defineEmits<{
   (e: 'configured'): void
   (e: 'skipped'): void
 }>()
 
-type Status = 'idle' | 'checking' | 'saving' | 'done' | 'paste-blocked' | 'failed' | ActivationCheck
+type Status = 'checking' | 'saving' | 'done' | 'failed' | Exclude<ActivationCheck, 'ok'>
 
-const code = ref('')
-const status = ref<Status>('idle')
-const input = useTemplateRef<HTMLInputElement>('input')
+const status = ref<Status>('checking')
 const { activate } = useWaifusActivation()
 
-const busy = computed(() => status.value === 'checking' || status.value === 'saving' || status.value === 'done')
-
-// The texts are pt-BR only: this build is for the Redragon team.
-const STATUS_TEXT: Partial<Record<Status, string>> = {
-  'checking': 'Conferindo o código...',
-  'saving': 'Código aceito. Preparando a Ruby e a Violet...',
-  'done': 'Pronto. Pode conversar com elas.',
-  'paste-blocked': 'Não consegui ler a área de transferência. Clique no campo e aperte Ctrl+V.',
-  'malformed': 'Esse não parece o nosso código: ele começa com wr- e tem 35 caracteres.',
-  'refused': 'A Integraction não reconheceu esse código. Confira se ele veio inteiro ou peça um novo.',
-  'offline': 'Não consegui falar com a Integraction. Veja a internet e tente de novo.',
-  'failed': 'O código foi aceito, mas a configuração falhou. Feche e abra o app de novo.',
+// The texts are pt-BR only: this build is for the Redragon team. Nothing here asks for a code or a password:
+// the app carries its own key for the bridge (see WAIFUS_APP_CODE).
+const STATUS_TEXT: Record<Status, string> = {
+  checking: 'Acordando a Ruby e a Violet...',
+  saving: 'Quase lá: ligando a conversa, a voz e o ouvido...',
+  done: 'Pronto. Pode conversar com elas.',
+  malformed: 'Esta cópia do app veio incompleta. Baixe o instalador de novo na página do app.',
+  refused: 'Esta versão do app saiu do ar. Baixe a nova na página do app.',
+  offline: 'Não consegui conectar. Veja a internet e tente de novo.',
+  failed: 'Algo falhou ao preparar as duas. Feche e abra o app de novo.',
 }
-const statusText = computed(() => STATUS_TEXT[status.value] ?? '')
+const statusText = computed(() => STATUS_TEXT[status.value])
 const statusTone = computed(() => {
   if (status.value === 'done' || status.value === 'saving')
     return 'ok'
-  if (status.value === 'checking' || status.value === 'paste-blocked')
+  if (status.value === 'checking')
     return 'info'
   return 'error'
 })
+const busy = computed(() => status.value === 'checking' || status.value === 'saving' || status.value === 'done')
+const canRetry = computed(() => status.value === 'offline' || status.value === 'failed')
 
-async function pasteCode() {
-  try {
-    code.value = normalizeActivationCode(await navigator.clipboard.readText())
-    status.value = 'idle'
-  }
-  catch {
-    status.value = 'paste-blocked'
-  }
-  input.value?.focus()
-}
-
-async function submit() {
-  if (busy.value)
-    return
-  const value = normalizeActivationCode(code.value)
-  code.value = value
+async function start() {
   status.value = 'checking'
-  const check = await checkActivationCode(value)
+  const check = await checkActivationCode(WAIFUS_APP_CODE)
   if (check !== 'ok') {
     status.value = check
-    input.value?.focus()
     return
   }
 
   status.value = 'saving'
   try {
-    await activate(value)
+    await activate(WAIFUS_APP_CODE)
   }
   catch (error) {
     console.error('[Waifus] Failed to configure the bridge providers.', error)
@@ -78,7 +60,7 @@ async function submit() {
   emit('configured')
 }
 
-onMounted(() => input.value?.focus())
+onMounted(start)
 </script>
 
 <template>
@@ -88,51 +70,26 @@ onMounted(() => input.value?.focus())
       <img :src="duoArt" alt="" draggable="false">
     </div>
 
-    <form class="panel" novalidate @submit.prevent="submit">
+    <div class="panel">
       <p class="kicker">
         Waifus Redragon
       </p>
       <h1>Ruby e Violet no seu PC</h1>
       <p class="lead">
-        Cole o código de acesso que a Integraction te mandou. Com ele as duas conversam, falam com voz própria e atendem quando você chama "Hey Ruby" ou "Hey Violet".
+        Já já elas aparecem na sua tela, prontas pra conversar. Pra chamar pela voz, ligue o microfone na barrinha do lado dela e diga "Hey Ruby" ou "Hey Violet".
       </p>
-
-      <label for="waifus-code">Código de acesso</label>
-      <div class="field">
-        <input
-          id="waifus-code"
-          ref="input"
-          v-model="code"
-          type="text"
-          inputmode="text"
-          autocomplete="off"
-          autocapitalize="off"
-          spellcheck="false"
-          placeholder="wr-..."
-          :disabled="busy"
-          :aria-invalid="statusTone === 'error' && statusText !== ''"
-          aria-describedby="waifus-status"
-        >
-        <button type="button" class="secondary" :disabled="busy" @click="pasteCode">
-          Colar
-        </button>
-      </div>
 
       <p id="waifus-status" class="status" :class="statusTone" role="status" aria-live="polite">
         {{ statusText }}
       </p>
 
-      <button type="submit" class="primary" :disabled="busy || code.trim() === ''">
-        {{ busy ? 'Ativando...' : 'Ativar' }}
+      <button v-if="canRetry" type="button" class="primary" @click="start">
+        Tentar de novo
       </button>
-
-      <p class="fine">
-        O código é seu: não passe pra ninguém. Sem código, peça pro time da Integraction.
-      </p>
-      <button type="button" class="skip" :disabled="busy" @click="emit('skipped')">
-        Pular por agora
+      <button v-if="!busy" type="button" class="skip" @click="emit('skipped')">
+        Abrir sem conversa
       </button>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -212,49 +169,17 @@ h1 {
 }
 
 .lead {
-  margin: 0 0 28px;
+  margin: 0 0 20px;
   font-size: 15px;
   line-height: 1.55;
   color: var(--waifus-muted);
 }
 
-label {
-  margin-bottom: 8px;
-  font-size: 13px;
-  font-weight: 600;
-}
 
-.field {
-  display: flex;
-  gap: 8px;
-}
 
-input {
-  flex: 1;
-  min-width: 0;
-  height: 44px;
-  padding: 0 14px;
-  border: 1px solid var(--waifus-line);
-  border-radius: 10px;
-  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
-  font-size: 14px;
-  color: var(--waifus-text);
-  background: var(--waifus-surface);
-  outline: none;
-}
 
-input::placeholder {
-  color: #7d7d8a;
-}
 
-input:focus-visible {
-  border-color: var(--waifus-violet);
-  box-shadow: 0 0 0 3px rgb(139 92 246 / 0.35);
-}
 
-input[aria-invalid='true'] {
-  border-color: var(--waifus-error);
-}
 
 button {
   border: 0;
@@ -273,18 +198,7 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-.secondary {
-  height: 44px;
-  padding: 0 16px;
-  border: 1px solid var(--waifus-line);
-  font-weight: 600;
-  color: var(--waifus-text);
-  background: var(--waifus-surface);
-}
 
-.secondary:not(:disabled):hover {
-  background: #202027;
-}
 
 .status {
   min-height: 36px;
@@ -317,12 +231,6 @@ button:focus-visible {
   background: var(--waifus-red-hover);
 }
 
-.fine {
-  margin: 14px 0 4px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--waifus-muted);
-}
 
 .skip {
   align-self: flex-start;

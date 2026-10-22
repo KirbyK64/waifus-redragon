@@ -7,11 +7,18 @@ import { useProviderConfigStore } from '@proj-airi/stage-ui/stores/providers/con
 import { useProviderStore } from '@proj-airi/stage-ui/stores/providers/provider'
 
 /**
- * The Integraction bridge. It holds the house keys for chat, voice and
- * transcription, so the app carries only a personal access code that the
- * bridge can limit and revoke.
+ * Our bridge. It holds the house keys for chat, voice and transcription, so the
+ * app carries only an access code that the bridge can limit and revoke.
  */
 export const WAIFUS_BRIDGE_URL = 'https://pm.solidpower.com.br/waifus-redragon/api/index.php/v1/'
+
+/**
+ * The access code of this build. The workflow puts it in from a repository secret
+ * (`WAIFUS_CODIGO_APP`), so it is never in the source. Nobody types it: the first
+ * screen uses it by itself. It is in every installer, so the bridge caps it per day,
+ * and a leak means a new code and a new build.
+ */
+export const WAIFUS_APP_CODE = String(import.meta.env.VITE_WAIFUS_APP_CODE ?? '').trim()
 
 const CHAT_PROVIDER = 'openai-compatible'
 const CHAT_MODEL = 'gpt-4.1-mini'
@@ -24,11 +31,6 @@ const HEARING_MODEL = 'gpt-4o-mini-transcribe'
 const CODE_PATTERN = /^wr-[A-Z0-9]{32}$/i
 
 export type ActivationCheck = 'ok' | 'malformed' | 'refused' | 'offline'
-
-/** Removes the spaces and line breaks that a pasted message brings along. */
-export function normalizeActivationCode(text: string) {
-  return text.replace(/\s+/g, '')
-}
 
 /** Asks the bridge whether it accepts the code. The model list costs nothing. */
 export async function checkActivationCode(code: string, signal?: AbortSignal): Promise<ActivationCheck> {

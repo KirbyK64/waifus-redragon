@@ -76,7 +76,7 @@ export function redragonCard(character: RedragonCharacter): Card & { extensions:
     scenario: persona.scenario,
     systemPrompt: persona.systemPrompt,
     greetings: [persona.greeting],
-    creator: 'Integraction',
+    creator: 'Redragon',
     extensions: {
       airi: {
         wakeWords,
@@ -88,7 +88,7 @@ export function redragonCard(character: RedragonCharacter): Card & { extensions:
           config: {},
         }],
         modules: {
-          // The access code points chat, voice and hearing at the Integraction
+          // The bridge code of the app points chat, voice and hearing at our
           // bridge. Each character speaks with her own ElevenLabs voice there;
           // the bundled pt-BR Kokoro voices stay available in the settings.
           // NOTICE: the chat selection lives on the card too. An empty one falls back to the

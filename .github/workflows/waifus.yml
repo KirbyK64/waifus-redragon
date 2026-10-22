@@ -1,5 +1,5 @@
 # Waifus Redragon: compila o app (fork do AIRI) sob pedido. Nada roda sozinho: sem schedule, sem push.
-# Fonte: o AIRI no commit 747d4f6 com as mudanças da Integraction (ver README.md).
+# Fonte: o AIRI no commit 747d4f6 com as mudanças das Waifus Redragon (ver README.md).
 #   alvo=web      versão de navegador (stage-web), artefato dist.zip
 #   alvo=windows  instalador .exe sem assinatura (stage-tamagotchi + electron-builder)
 #   alvo=android  APK de teste assinado com a chave de debug (stage-pocket + Capacitor)
@@ -82,7 +82,12 @@ jobs:
         run: |
           mkdir -p out/win
           godot --headless --export-release "Windows Desktop" out/win/godot-stage.exe
-      - run: pnpm run -F @proj-airi/stage-tamagotchi build && pnpm -F @proj-airi/stage-tamagotchi exec electron-builder build --windows --x64 --publish=never
+      - name: App e instalador
+        env:
+          # O código do app pra nossa ponte: ninguém digita, a primeira tela usa sozinho. Vem do segredo, nunca do
+          # código-fonte; a ponte limita por dia e troca de código = build novo.
+          VITE_WAIFUS_APP_CODE: ${{ secrets.WAIFUS_CODIGO_APP }}
+        run: pnpm run -F @proj-airi/stage-tamagotchi build && pnpm -F @proj-airi/stage-tamagotchi exec electron-builder build --windows --x64 --publish=never
       - uses: actions/upload-artifact@v4
         with:
           name: waifus-windows
@@ -91,9 +96,6 @@ jobs:
           retention-days: 3
       - name: Prova no Windows
         shell: pwsh
-        env:
-          # Código de teste com teto baixo na ponte da Integraction; revogável em _ops/waifus-redragon/codigos.php.
-          WAIFUS_CODIGO: ${{ secrets.WAIFUS_CODIGO_TESTE }}
         run: |
           npm i --no-save --prefix .github/waifus-prova playwright-core@1.56.1
           $exe = (Get-ChildItem apps/stage-tamagotchi/dist/*-setup.exe | Select-Object -First 1).FullName
@@ -125,8 +127,6 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile "$env:RUNNER_TEMP\setup.exe"
       - name: Prova no Windows
         shell: pwsh
-        env:
-          WAIFUS_CODIGO: ${{ secrets.WAIFUS_CODIGO_TESTE }}
         run: |
           npm i --no-save --prefix .github/waifus-prova playwright-core@1.56.1
           node .github/waifus-prova/prova.mjs "$env:RUNNER_TEMP\setup.exe" "$env:RUNNER_TEMP\prova"

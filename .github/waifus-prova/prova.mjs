@@ -1,6 +1,6 @@
 // Prova do app num Windows de verdade (runner do GitHub): instala calado, abre, fotografa a tela e cada janela.
-// Com WAIFUS_CODIGO no ambiente (segredo do repositório), também ativa com o código de teste, abre a conversa,
-// manda uma mensagem, espera a resposta e testa a setinha da esquerda. O código nunca vai pro relato.
+// Confere que a primeira tela configura tudo sozinha (sem pedir código nem senha), abre a conversa, manda uma
+// mensagem, espera a resposta e testa a setinha da esquerda.
 // uso: node prova.mjs <instalador.exe> <pasta-de-saida>
 import { execFileSync, spawn, spawnSync } from 'node:child_process'
 import { createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -16,7 +16,6 @@ const espera = ms => new Promise(r => setTimeout(r, ms))
 const PORTA = 9333
 // NOTICE: o nome do exe vem do executableName do electron-builder (waifus-redragon.exe), não do productName
 const NOME = /^waifus.*\.exe$/i
-const CODIGO = (process.env.WAIFUS_CODIGO ?? '').trim()
 
 function tela(nome) {
   try {
@@ -60,43 +59,38 @@ async function achaPagina(browser, trecho, ms = 20000) {
   return null
 }
 
-/** A tela de ativação: confere o fundo escuro, recusa um código inventado e aceita o de teste. */
-async function ativar(browser) {
+/**
+ * A primeira tela: tem que configurar tudo sozinha, sem pedir código nem senha e sem falar em Integraction.
+ * Ela abre e fecha em segundos, então a prova procura por ela logo que o app abre a porta de depuração.
+ */
+async function primeiraTela(browser) {
   const pag = await achaPagina(browser, '#/onboarding', 30000)
   if (!pag) {
-    nota('ativação: a janela de boas-vindas não apareceu')
-    return false
+    nota('primeira tela: não vi (ou abriu e fechou antes de a prova olhar)')
+    return
   }
-  await pag.waitForSelector('#waifus-code', { timeout: 30000 })
-  const tela = await pag.evaluate(() => ({
-    fundo: getComputedStyle(document.querySelector('.activation')).backgroundColor,
-    texto: document.querySelector('.activation').innerText.replace(/\s+/g, ' ').slice(0, 300),
-  }))
-  nota(`ativação: tela aberta, fundo ${tela.fundo}`)
-  nota(`  texto: ${tela.texto}`)
-  await pag.screenshot({ path: join(out, '10-ativar.png') })
-
-  await pag.fill('#waifus-code', `wr-${'x'.repeat(32)}`)
-  await pag.click('button[type=submit]')
-  await pag.waitForFunction(() => /não reconheceu/.test(document.querySelector('#waifus-status')?.textContent ?? ''), null, { timeout: 20000 })
-    .then(() => nota('ativação: código inventado recusado com aviso'), () => nota(`ativação: código inventado sem o aviso esperado (${pag.url()})`))
-  await pag.screenshot({ path: join(out, '11-codigo-errado.png') })
-
-  if (!CODIGO) {
-    nota('ativação: sem WAIFUS_CODIGO no ambiente, parei aqui')
-    return false
-  }
-  await pag.fill('#waifus-code', CODIGO)
   const t0 = Date.now()
   const fechou = pag.waitForEvent('close', { timeout: 40000 }).then(() => true, () => false)
-  await pag.click('button[type=submit]')
-  if (!await fechou) {
-    nota(`ativação: a janela não fechou; aviso na tela: ${await pag.textContent('#waifus-status').catch(() => '?')}`)
-    await pag.screenshot({ path: join(out, '12-ativar-falhou.png') }).catch(() => {})
-    return false
+  const tela = await pag.evaluate(() => {
+    const raiz = document.querySelector('.activation') ?? document.body
+    return {
+      fundo: getComputedStyle(raiz).backgroundColor,
+      texto: raiz.innerText.replace(/\s+/g, ' ').slice(0, 300),
+      campos: document.querySelectorAll('input, textarea').length,
+    }
+  }).catch(() => null)
+  if (tela) {
+    nota(`primeira tela: aberta, fundo ${tela.fundo}, ${tela.campos} campo(s) pra digitar`)
+    nota(`  texto: ${tela.texto}`)
+    nota(`primeira tela: ${/integraction/i.test(tela.texto) ? 'FALA em Integraction' : 'sem Integraction'}; ${/c[óo]digo|senha/i.test(tela.texto) ? 'FALA em código ou senha' : 'sem pedir código nem senha'}`)
+    await pag.screenshot({ path: join(out, '10-primeira-tela.png') }).catch(() => {})
   }
-  nota(`ativação: código de teste aceito, a janela fechou em ${((Date.now() - t0) / 1000).toFixed(1)} s`)
-  return true
+  if (!await fechou) {
+    nota(`primeira tela: não fechou sozinha; aviso: ${await pag.textContent('#waifus-status').catch(() => '?')}`)
+    await pag.screenshot({ path: join(out, '11-primeira-tela-parada.png') }).catch(() => {})
+    return
+  }
+  nota(`primeira tela: configurou sozinha e fechou em ${((Date.now() - t0) / 1000).toFixed(1)} s`)
 }
 
 /** Abre a conversa pelo botão do palco, manda uma pergunta e espera a resposta aparecer. */
@@ -225,11 +219,6 @@ async function main() {
     throw new Error(`o app não abriu a porta de depuração (saiu com ${saiu})`)
   nota(`app abriu em ${Math.round((Date.now() - t0) / 1000)} s`)
 
-  // tempo pra carregar o corpo 3D e a voz
-  await espera(25000)
-  nota(`app ainda rodando depois de 25 s: ${saiu === null ? 'sim' : `não (saiu com ${saiu})`}`)
-  tela('01-area-de-trabalho.png')
-
   const browser = await chromium.connectOverCDP(`http://127.0.0.1:${PORTA}`)
   // Todo endereço de fora que as janelas pedem daqui pra frente: prova de que o app só fala com a nossa ponte.
   const destinos = new Map()
@@ -260,12 +249,14 @@ async function main() {
     ctx.pages().forEach(vigia)
     ctx.on('page', vigia)
   }
-  if (await ativar(browser).catch((e) => { nota(`ativação: erro ${e.message.split('\n')[0]}`); return false })) {
-    await espera(5000)
-    tela('12-area-de-trabalho-ativado.png')
-    await conversar(browser).catch(e => nota(`conversa: erro ${e.message.split('\n')[0]}`))
-    await esquerda(browser).catch(e => nota(`esquerda: erro ${e.message.split('\n')[0]}`))
-  }
+  await primeiraTela(browser).catch(e => nota(`primeira tela: erro ${e.message.split('\n')[0]}`))
+
+  // tempo pra carregar o corpo 3D e a voz
+  await espera(20000)
+  nota(`app ainda rodando depois de 20 s: ${saiu === null ? 'sim' : `não (saiu com ${saiu})`}`)
+  tela('12-area-de-trabalho-ativado.png')
+  await conversar(browser).catch(e => nota(`conversa: erro ${e.message.split('\n')[0]}`))
+  await esquerda(browser).catch(e => nota(`esquerda: erro ${e.message.split('\n')[0]}`))
 
   for (const ctx of browser.contexts())
     ctx.pages().forEach(vigia)
@@ -296,6 +287,8 @@ async function main() {
           }
         })
         nota(`página ${n}: ${url} · título "${info.titulo}" · ${info.canvas} canvas · GPU ${info.gpu} · WebGPU ${info.webgpu}`)
+        if (/integraction/i.test(`${info.titulo} ${info.texto}`))
+          nota(`  página ${n} FALA em Integraction`)
         nota(`  texto: ${info.texto}`)
       }
       catch (e) { nota(`página ${n}: ${url} · não li (${e.message.split('\n')[0]})`) }

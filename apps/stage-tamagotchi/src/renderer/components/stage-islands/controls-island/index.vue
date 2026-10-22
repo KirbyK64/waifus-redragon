@@ -446,7 +446,7 @@ function tuckToEdge() {
                 </div>
                 <!-- v-show keeps dialogs and listeners of the controls mounted while the list shows. -->
                 <div v-show="menuView === 'controls'" :class="['flex flex-col gap-1']">
-                  <!-- Waifus Redragon: no AIRI account sign-in. The Integraction access code covers chat, voice and hearing. -->
+                  <!-- Waifus Redragon: no AIRI account sign-in. The bridge code of the app covers chat, voice and hearing. -->
 
                   <!--
                     The same Notifications row as the mobile menu. It is a plain button,

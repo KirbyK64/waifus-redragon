@@ -51,7 +51,7 @@ async function handleConfigured() {
   >
     <div class="min-h-8 w-full flex-shrink-0 select-none drag-region" :class="bgClass" />
     <div class="mx-8 mb-8 mt-2 min-h-0 flex flex-1 flex-col">
-      <!-- Waifus Redragon: one access code configures chat, voice and hearing through the Integraction bridge. -->
+      <!-- Waifus Redragon: the first screen configures chat, voice and hearing through our bridge by itself. -->
       <WaifusActivation @skipped="handleSkipped" @configured="handleConfigured" />
     </div>
   </div>

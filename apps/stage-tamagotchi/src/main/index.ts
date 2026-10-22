@@ -279,7 +279,7 @@ app.whenReady().then(async () => {
     build: ({ dependsOn }) => setupAutoUpdater({
       // NOTICE: desligado como na versão da Steam. O atualizador do AIRI procura versão nova nas releases
       // da moeru-ai e passa por cima de qualquer feed nosso: trocaria a Ruby e a Violet pelo AIRI original.
-      // Versão nova sai pela página da Integraction.
+      // Versão nova sai pela página do app.
       enabled: false,
       getStoredUpdateLane: () => dependsOn.appConfig.get()?.updateChannel,
       setStoredUpdateLane: (lane) => {
