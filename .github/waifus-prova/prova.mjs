@@ -130,7 +130,7 @@ async function conversar(browser) {
   const depoisDaPergunta = () => chat.evaluate((q) => {
     const texto = document.body.innerText
     const i = texto.lastIndexOf(q)
-    return i < 0 ? '' : texto.slice(i + q.length).replace(/Respondendo a Mensagem/g, '').replace(/\s+/g, ' ').trim()
+    return i < 0 ? '' : texto.slice(i + q.length).replace(/\s+/g, ' ').replace(/Respondendo a Mensagem/g, '').trim()
   }, pergunta).catch(() => '')
   const inicio = await depoisDaPergunta()
   let ultimo = inicio
