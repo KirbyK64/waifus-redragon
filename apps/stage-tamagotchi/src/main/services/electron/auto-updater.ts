@@ -36,9 +36,14 @@ function getReleaseChannelName() {
   return process.arch === 'arm64' ? 'latest-arm64' : 'latest-x64'
 }
 
-const GITHUB_RELEASES_API_URL = 'https://api.github.com/repos/moeru-ai/airi/releases?per_page=100'
-const GITHUB_RELEASES_ATOM_URL = 'https://github.com/moeru-ai/airi/releases.atom'
-const GITHUB_RELEASE_DOWNLOAD_BASE_URL = 'https://github.com/moeru-ai/airi/releases/download'
+// NOTICE: updates come from the Waifus Redragon releases, never from moeru-ai: an upstream
+// release would replace Ruby and Violet with the original AIRI.
+const RELEASES_REPOSITORY = 'KirbyK64/waifus-redragon'
+const GITHUB_RELEASES_API_URL = `https://api.github.com/repos/${RELEASES_REPOSITORY}/releases?per_page=100`
+const GITHUB_RELEASES_ATOM_URL = `https://github.com/${RELEASES_REPOSITORY}/releases.atom`
+const GITHUB_RELEASE_DOWNLOAD_BASE_URL = `https://github.com/${RELEASES_REPOSITORY}/releases/download`
+/** How often a running app looks for a new release. */
+const CHECK_INTERVAL_MS = 4 * 60 * 60 * 1000
 const UPDATE_CHANNEL_ENV_KEY = 'AIRI_UPDATE_CHANNEL'
 
 function getCacheRoot() {
@@ -193,7 +198,7 @@ function selectLatestTagForLane(releases: GitHubReleaseRecord[], lane: UpdateLan
  */
 function extractReleaseTagsFromAtom(atom: string) {
   const tags: string[] = []
-  const marker = '/moeru-ai/airi/releases/tag/'
+  const marker = `/${RELEASES_REPOSITORY}/releases/tag/`
   let offset = 0
 
   while (offset < atom.length) {
@@ -322,7 +327,9 @@ export function setupAutoUpdater(options: AutoUpdaterOptions = {}): AutoUpdater 
   let prepareFeedPromise: Promise<void> | undefined
 
   autoUpdater.allowPrerelease = isPrereleaseBuild
-  autoUpdater.autoDownload = false
+  // The app updates itself: it downloads a new release in the background and installs it
+  // silently, then opens again. Nobody has to visit the download page.
+  autoUpdater.autoDownload = true
   void cleanupStaleUpdateFiles()
   if (activeFeedUrlOverride)
     autoUpdater.channel = releaseChannelName
@@ -474,7 +481,12 @@ export function setupAutoUpdater(options: AutoUpdaterOptions = {}): AutoUpdater 
   autoUpdater.on('error', error => broadcastUpdaterError(error, 'autoUpdater error'))
   autoUpdater.on('checking-for-update', () => broadcast({ status: 'checking' }))
   autoUpdater.on('update-available', (info: UpdateInfo) => broadcast({ status: 'available', info }))
-  autoUpdater.on('update-downloaded', (info: UpdateInfo) => broadcast({ status: 'downloaded', info }))
+  autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
+    broadcast({ status: 'downloaded', info })
+    void logToFile('INFO', `Installing ${info.version} silently and opening again`)
+    // Silent install, then the app runs again with the same settings and conversations.
+    setTimeout(() => autoUpdater.quitAndInstall(true, true), 3000)
+  })
   autoUpdater.on('update-not-available', () => broadcast({
     status: 'not-available',
     info: {
@@ -496,6 +508,16 @@ export function setupAutoUpdater(options: AutoUpdaterOptions = {}): AutoUpdater 
 
   void checkForUpdatesWithPreparedFeed()
     .catch(error => broadcastUpdaterError(error, 'checkForUpdates() failed'))
+  // The tag is resolved again on every check, so a release published while the app runs is found.
+  setInterval(() => {
+    if (state.status === 'downloading' || state.status === 'downloaded')
+      return
+    resolvedReleaseTag = undefined
+    if (!feedUrlOverride)
+      activeFeedUrlOverride = undefined
+    void checkForUpdatesWithPreparedFeed()
+      .catch(error => broadcastUpdaterError(error, 'checkForUpdates() failed'))
+  }, CHECK_INTERVAL_MS).unref?.()
 
   return {
     get state() {

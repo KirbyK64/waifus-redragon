@@ -578,7 +578,97 @@ function vitrine() {
   catch (e) { nota(`vitrine falhou: ${e.message.split('\n')[0]}`) }
 }
 
+/** Versão gravada no exe (o instalador e o app levam a versão das Waifus). */
+function versaoDe(arquivo) {
+  try {
+    return execFileSync('powershell', ['-NoProfile', '-Command', `(Get-Item '${arquivo}').VersionInfo.ProductVersion`]).toString().trim()
+  }
+  catch { return '' }
+}
+
+const numeros = v => (v.match(/\d+/g) ?? []).slice(0, 3).map(Number)
+const maisNova = (a, b) => { const [x, y] = [numeros(a), numeros(b)]; for (let i = 0; i < 3; i++) if ((x[i] ?? 0) !== (y[i] ?? 0)) return (x[i] ?? 0) > (y[i] ?? 0); return false }
+
+/** A release mais nova do nosso repositório: é dela que o app instalado se atualiza. */
+async function ultimaRelease() {
+  try {
+    const r = await fetch('https://api.github.com/repos/KirbyK64/waifus-redragon/releases?per_page=100', { headers: { accept: 'application/vnd.github+json' } })
+    const tags = (await r.json()).filter(x => !x.draft).map(x => x.tag_name)
+    return tags.reduce((a, b) => (maisNova(b, a) ? b : a), 'v0.0.0')
+  }
+  catch { return '' }
+}
+
+/** O registro do atualizador fica na pasta de cache do app; acha onde for. */
+function registroDoAtualizador() {
+  for (const raiz of [process.env.LOCALAPPDATA, process.env.APPDATA].filter(Boolean)) {
+    let nomes = []
+    try { nomes = readdirSync(raiz) }
+    catch { continue }
+    for (const n of nomes) {
+      const arq = join(raiz, n, 'stage-tamagotchi-updater', 'updater-log.txt')
+      if (existsSync(arq))
+        return readFileSync(arq, 'utf8')
+    }
+    const arq = join(raiz, 'stage-tamagotchi-updater', 'updater-log.txt')
+    if (existsSync(arq))
+      return readFileSync(arq, 'utf8')
+  }
+  return ''
+}
+
+/**
+ * Prova de que o app se atualiza sozinho: instala o instalador antigo, abre como a pessoa abre e não
+ * toca em nada. Passa quando o exe instalado vira a versão da release mais nova e o app volta aberto.
+ */
+async function atualizacao(alvo) {
+  nota(`atualização: instalador ${versaoDe(setup)}, release mais nova ${alvo}`)
+  vitrine()
+  const inst = spawnSync(setup, ['/S'], { stdio: 'inherit' })
+  nota(`instalador /S: saiu com ${inst.status}`)
+  const exe = acha()
+  if (!exe)
+    throw new Error('não achei o exe do app depois de instalar')
+  const antes = versaoDe(exe)
+  nota(`instalado: ${antes}`)
+  spawn(exe, [], { detached: true, stdio: 'ignore', env: { ...process.env } }).unref()
+  await espera(25000)
+  tela('50-aberto-versao-antiga.png')
+  const t0 = Date.now()
+  let agora = antes
+  while (Date.now() - t0 < 12 * 60 * 1000) {
+    await espera(10000)
+    agora = versaoDe(exe) || agora
+    if (agora !== antes)
+      break
+  }
+  const minutos = ((Date.now() - t0) / 60000).toFixed(1)
+  if (agora === antes) {
+    nota(`atualização: FALHOU, ainda ${antes} depois de ${minutos} min`)
+    process.exitCode = 1
+  }
+  else {
+    nota(`atualização: o exe virou ${agora} sozinho em ${minutos} min, sem ninguém clicar`)
+  }
+  await espera(30000)
+  const rodando = spawnSync('tasklist', ['/FI', `IMAGENAME eq ${exe.split('\\').pop()}`]).stdout.toString().includes(exe.split('\\').pop())
+  nota(`app aberto de novo depois de atualizar: ${rodando ? 'sim' : 'não'}`)
+  if (!rodando)
+    process.exitCode = 1
+  tela('51-depois-de-atualizar.png')
+  const reg = registroDoAtualizador()
+  writeFileSync(join(out, 'atualizador.txt'), reg)
+  for (const l of reg.split('\n').filter(Boolean).slice(-15))
+    nota(`  atualizador: ${l.slice(0, 250)}`)
+}
+
 async function main() {
+  // Instalador mais velho que a release mais nova: a prova é a da atualização sozinha.
+  const alvo = await ultimaRelease()
+  const dele = versaoDe(setup)
+  if (alvo && dele && maisNova(alvo, dele))
+    return atualizacao(alvo)
+
   vitrine()
   tela('00-antes.png')
 

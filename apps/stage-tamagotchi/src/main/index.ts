@@ -277,10 +277,9 @@ app.whenReady().then(async () => {
   const autoUpdater = injeca.provide('services:auto-updater', {
     dependsOn: { appConfig },
     build: ({ dependsOn }) => setupAutoUpdater({
-      // NOTICE: desligado como na versão da Steam. O atualizador do AIRI procura versão nova nas releases
-      // da moeru-ai e passa por cima de qualquer feed nosso: trocaria a Ruby e a Violet pelo AIRI original.
-      // Versão nova sai pela página do app.
-      enabled: false,
+      // NOTICE: the updater reads only the Waifus Redragon releases (auto-updater.ts), so a new
+      // version installs itself and the app opens again.
+      enabled: true,
       getStoredUpdateLane: () => dependsOn.appConfig.get()?.updateChannel,
       setStoredUpdateLane: (lane) => {
         const currentConfig = dependsOn.appConfig.get()
