@@ -19,7 +19,7 @@ README original do AIRI está em [`docs/README.airi.md`](docs/README.airi.md).
 ## O que não está na licença MIT
 
 - **Personagens, nomes e arte**: Ruby, Violet, a arte e os modelos 3D
-  (`packages/stage-ui/src/assets/vrm/models/Carmen`, `.../Violet`) pertencem à Redragon, com todos os direitos
+  (`packages/stage-ui/src/assets/vrm/models/Ruby`, `.../Violet`) pertencem à Redragon, com todos os direitos
   reservados. Não podem ser usados fora deste app sem autorização.
 - **Vozes**: as vozes da Ruby e da Violet são da nossa conta na ElevenLabs e só tocam pela ponte. As de reserva em
   `packages/stage-ui/src/workers/kokoro/voices/` são vozes do Kokoro-82M (Apache-2.0) e misturas delas.

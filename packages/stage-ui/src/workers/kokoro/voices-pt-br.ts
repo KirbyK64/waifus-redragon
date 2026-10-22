@@ -9,7 +9,7 @@
 
 import type { Voices } from './types'
 
-import carmenUrl from './voices/carmen.bin?url'
+import rubyUrl from './voices/ruby.bin?url'
 import pfDoraUrl from './voices/pf_dora.bin?url'
 import pmAlexUrl from './voices/pm_alex.bin?url'
 import pmSantaUrl from './voices/pm_santa.bin?url'
@@ -29,8 +29,7 @@ const VOICE_URLS: Record<PtBrVoiceKey, string> = {
   pf_dora: pfDoraUrl,
   pm_alex: pmAlexUrl,
   pm_santa: pmSantaUrl,
-  // The Ruby preset keeps the file name from when she was called Carmen.
-  ruby: carmenUrl,
+  ruby: rubyUrl,
   violet: violetUrl,
 }
 

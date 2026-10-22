@@ -39,7 +39,7 @@ describe('useMemoryImport', () => {
   it('reads the file on the device, then learns, reviews, and saves general memories', async () => {
     const memory = useMemoryStore()
     memory.writeGeneral({ name: 'viagem', description: 'Quer viajar.', body: 'Quer viajar.' })
-    memory.write({ name: 'segredo', description: 'Da carta.', body: 'Só da Carmen.' }, 'carmen')
+    memory.write({ name: 'segredo', description: 'Da carta.', body: 'Só da Ruby.' }, 'ruby')
     const importer = useMemoryImport()
 
     await importer.read(grokExport())
@@ -71,10 +71,10 @@ describe('useMemoryImport', () => {
     expect(importer.phase.value).toBe('saved')
     expect(importer.saved.value).toBe(2)
     expect(memory.read('viagem', 'violet')?.body).toBe('Quer ir ao Japão em abril ver as cerejeiras.')
-    expect(memory.read('idiomas', 'carmen')?.body).toBe('Estuda japonês há um ano.')
-    expect(memory.read('errado', 'carmen')).toBeUndefined()
+    expect(memory.read('idiomas', 'ruby')?.body).toBe('Estuda japonês há um ano.')
+    expect(memory.read('errado', 'ruby')).toBeUndefined()
     expect(memory.entries.filter(entry => !entry.persona)).toHaveLength(2)
-    expect(memory.read('segredo', 'carmen')?.body).toBe('Só da Carmen.')
+    expect(memory.read('segredo', 'ruby')?.body).toBe('Só da Ruby.')
   })
 
   it('reports a file without conversations and a missing chat model', async () => {

@@ -5,8 +5,8 @@ They replace the AIRI character stickers of the upstream project.
 
 ## Source
 
-Each sticker is a face crop from the expression sheets of the two VRM models
-(`app-carmen-rosto.webp` and `app-violet-rosto.webp`), inside a rounded white frame.
+Each sticker is a face crop from the expression sheets of the two VRM models,
+inside a rounded white frame.
 The script that builds them is `faz-figurinhas.py` in the Waifus Redragon build notes.
 
 The file names keep the upstream `airi-*` ids, so saved chats and translations still resolve.

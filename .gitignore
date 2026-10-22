@@ -87,7 +87,7 @@ components.d.ts
 **/assets/live2d/models/*
 **/assets/vrm/models/*
 # Redragon characters ship with the app instead of downloading at build time
-!**/assets/vrm/models/Carmen
+!**/assets/vrm/models/Ruby
 !**/assets/vrm/models/Violet
 
 # Serving fonts locally

@@ -12,13 +12,13 @@
       "blur-material": null,
       "layers": [
         {
-          "image-name": "Carmen.png",
-          "name": "Carmen",
+          "image-name": "Ruby.png",
+          "name": "Ruby",
           "glass": false,
           "hidden": false
         }
       ],
-      "name": "Carmen",
+      "name": "Ruby",
       "shadow": {
         "kind": "neutral",
         "opacity": 0.5

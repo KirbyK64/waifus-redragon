@@ -57,7 +57,7 @@ const PERSONAS: Record<RedragonCharacter, Persona> = {
 }
 
 const DISPLAY_MODEL_IDS: Record<RedragonCharacter, string> = {
-  // Ruby was called Carmen before 21/10/2026; her 3D body keeps that file and id.
+  // Ruby's 3D body keeps the id it shipped with in v0.1.0, so models saved by older installs still load.
   ruby: 'preset-vrm-carmen',
   violet: 'preset-vrm-violet',
 }
