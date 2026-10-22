@@ -18,6 +18,8 @@ const espera = ms => new Promise(r => setTimeout(r, ms))
 const PORTA = 9333
 // NOTICE: o nome do exe vem do executableName do electron-builder (waifus-redragon.exe), não do productName
 const NOME = /^waifus.*\.exe$/i
+// Papel de parede das duas (página do app, sem login): as fotos da tela inteira mostram o app num PC de quem usa.
+const PAPEL = 'https://pm.solidpower.com.br/waifus-redragon/baixar/duo-wallpaper-2560x1440.jpg'
 const ATALHOS = () => [join(process.env.USERPROFILE, 'Desktop'), join(process.env.PUBLIC ?? 'C:\\Users\\Public', 'Desktop')].map(d => join(d, 'Waifus Redragon.lnk'))
 
 // Toda tela de Configurações que existe no app (pastas de páginas do stage-pages e do stage-tamagotchi), mais o Sobre.
@@ -257,8 +259,8 @@ async function perguntar(chat, pergunta, ms = 60000) {
   return ultimo !== inicio ? { s: (parado - t0) / 1000, texto: ultimo } : null
 }
 
-/** Abre a conversa pelo botão do palco, manda uma pergunta e espera a resposta aparecer. Devolve a janela da conversa. */
-async function conversar(browser) {
+/** Abre a conversa pelo botão do palco, como quem usa: devolve a janela da conversa com a caixa de escrever pronta. */
+async function abreConversa(browser) {
   const palco = paginas(browser).find(p => p.url().includes('synced-leader=true') && /#\/?$/.test(p.url()))
   if (!palco) {
     nota('conversa: não achei a janela do palco')
@@ -279,6 +281,14 @@ async function conversar(browser) {
   }
   nota(`conversa: janela aberta (${chat.url().split('#')[1] ?? chat.url()})`)
   await chat.waitForSelector('textarea', { timeout: 20000 })
+  return chat
+}
+
+/** Abre a conversa, manda uma pergunta e espera a resposta aparecer. Devolve a janela da conversa. */
+async function conversar(browser) {
+  const chat = await abreConversa(browser)
+  if (!chat)
+    return null
   const pergunta = 'Oi! Em uma frase curta: qual é o seu nome?'
   const r = await perguntar(chat, pergunta)
   nota(r
@@ -300,8 +310,8 @@ async function papo(chat, rotulo, perguntas) {
     nota(r ? `${rotulo} ${n}: ${r.s.toFixed(1)} s · P: ${q} · R: ${r.texto.slice(0, 500)}` : `${rotulo} ${n}: sem resposta em 60 s · P: ${q}`)
     // a fala da resposta antes da próxima pergunta
     await espera(6000)
+    await chat.screenshot({ path: join(out, `20-${rotulo}-${n}.png`) }).catch(() => {})
   }
-  await chat.screenshot({ path: join(out, `20-${rotulo}.png`) }).catch(() => {})
 }
 
 /** Liga "Esconder na esquerda" nas Configurações e usa a setinha da borda: esconde, mostra, esconde de novo. */
@@ -348,8 +358,12 @@ async function esquerda(browser) {
   nota(`esquerda: desliguei de novo pro passeio (${paginas(browser).some(p => p.url().includes('#/edge-tab')) ? 'setinha ainda na borda' : 'setinha saiu'})`)
 }
 
-/** Troca pra Violet pelo cartão dela nas Configurações, como quem usa faria, e conversa com ela. */
-async function violet(chat, rotaChat) {
+/**
+ * Troca pra Violet pelo cartão dela nas Configurações, como quem usa faria, e conversa com ela.
+ * NOTICE: trocar só o # da janela da conversa de volta pra conversa deixa ela em branco (prova de 22/10 01h16); quem
+ * usa abre as Configurações na janela delas. Aqui a janela volta pelo endereço inteiro com que ela abriu.
+ */
+async function violet(chat, urlChat) {
   await chat.evaluate(() => { location.hash = '#/settings/airi-card/redragon-violet' })
   const botao = chat.getByRole('button', { name: /^Ativar$/ }).first()
   if (!await botao.waitFor({ timeout: 20000 }).then(() => true, () => false)) {
@@ -363,7 +377,7 @@ async function violet(chat, rotaChat) {
   await espera(15000)
   nota(`violet: ativei pelo cartão; ${((Date.now() - t0) / 1000).toFixed(0)} s depois a foto da área de trabalho`)
   tela('22-violet-na-area-de-trabalho.png')
-  await chat.evaluate((r) => { location.hash = `#${r}` }, rotaChat)
+  await chat.goto(urlChat, { waitUntil: 'load' })
   await chat.waitForSelector('textarea', { timeout: 20000 })
   await espera(2000)
   nota(`violet: topo da conversa depois da troca: ${(await chat.evaluate(() => document.body.innerText).catch(() => '')).replace(/\s+/g, ' ').slice(0, 160)}`)
@@ -505,7 +519,16 @@ async function desinstalar(exe) {
   }
 }
 
+function vitrine() {
+  try {
+    execFileSync('powershell', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', join(import.meta.dirname, 'vitrine.ps1'), PAPEL])
+    nota('vitrine: papel de parede das duas e janelas do runner minimizadas')
+  }
+  catch (e) { nota(`vitrine falhou: ${e.message.split('\n')[0]}`) }
+}
+
 async function main() {
+  vitrine()
   tela('00-antes.png')
 
   let t0 = Date.now()
@@ -577,7 +600,7 @@ async function main() {
   tela('12-area-de-trabalho-ativado.png')
   recursos('parado com a Ruby na tela')
   const chat = await conversar(browser).catch(e => nota(`conversa: erro ${e.message.split('\n')[0]}`))
-  const rotaChat = chat ? (chat.url().split('#')[1] ?? '/chat') : '/chat'
+  const urlChat = chat?.url()
   if (chat) {
     await papo(chat, 'ruby', [
       'Meu nome é Gui e eu jogo Valorant. Guarda isso, tá?',
@@ -592,9 +615,9 @@ async function main() {
   }
   await esquerda(browser).catch(e => nota(`esquerda: erro ${e.message.split('\n')[0]}`))
   if (chat) {
-    await violet(chat, rotaChat).catch(e => nota(`violet: erro ${e.message.split('\n')[0]}`))
+    await violet(chat, urlChat).catch(e => nota(`violet: erro ${e.message.split('\n')[0]}`))
     await passeioConfig(chat).catch(e => nota(`config: erro ${e.message.split('\n')[0]}`))
-    await chat.evaluate((r) => { location.hash = `#${r}` }, rotaChat).catch(() => {})
+    await chat.goto(urlChat, { waitUntil: 'load' }).catch(() => {})
   }
 
   for (const ctx of browser.contexts())
