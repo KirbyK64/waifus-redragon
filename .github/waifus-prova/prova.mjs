@@ -477,6 +477,33 @@ function recursos(rotulo) {
   catch (e) { nota(`recursos ${rotulo}: falhou (${e.message.split('\n')[0]})`) }
 }
 
+/** Quantos pedidos de conversa já foram pra pasta, por rodada (primeira abertura e reaberto). */
+const pedidosChat = new Map()
+let falhas = 0
+
+/**
+ * Guarda os primeiros pedidos de conversa como o app manda (instrução, histórico e ferramentas; a chave vai no
+ * cabeçalho e não entra) e anota todo pedido que falha, com o endereço e o erro.
+ */
+function espiaPedidos(page, rotulo) {
+  if (page.__espiada)
+    return
+  page.__espiada = true
+  page.on('request', (r) => {
+    if (r.method() !== 'POST' || !/\/v1\/chat\/completions/.test(r.url()))
+      return
+    const n = (pedidosChat.get(rotulo) ?? 0) + 1
+    pedidosChat.set(rotulo, n)
+    if (n <= 3)
+      writeFileSync(join(out, `pedido-chat-${rotulo}-${n}.json`), r.postData() ?? '')
+  })
+  page.on('requestfailed', (r) => {
+    if (r.url().startsWith('devtools:') || ++falhas > 30)
+      return
+    nota(`${rotulo}: pedido falhou: ${r.method()} ${r.url().replace(/\?.*/, '').slice(0, 160)} (${r.failure()?.errorText})`)
+  })
+}
+
 /** Fecha tudo e abre de novo: tem que voltar configurado, sem a primeira tela, e com a conversa de antes. */
 async function reabrir(exe, marcas) {
   spawnSync('taskkill', ['/IM', exe.split('\\').pop(), '/F', '/T'], { stdio: 'ignore' })
@@ -484,6 +511,10 @@ async function reabrir(exe, marcas) {
   const estado = await liga(exe, 'app-2.log')
   nota(`reabrir: abriu em ${estado.segundos} s`)
   const browser = await chromium.connectOverCDP(`http://127.0.0.1:${PORTA}`)
+  for (const c of browser.contexts()) {
+    c.pages().forEach(p => espiaPedidos(p, 'reaberto'))
+    c.on('page', p => espiaPedidos(p, 'reaberto'))
+  }
   const onb = await achaPagina(browser, '#/onboarding', 8000)
   nota(`reabrir: primeira tela ${onb ? 'APARECEU de novo' : 'não apareceu'}`)
   await espera(15000)
@@ -575,6 +606,7 @@ async function main() {
     if (page.__vigiada)
       return
     page.__vigiada = true
+    espiaPedidos(page, 'primeira')
     page.on('request', (r) => {
       let host = ''
       try { host = new URL(r.url()).host }
