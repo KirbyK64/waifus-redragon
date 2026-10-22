@@ -24,6 +24,8 @@ function createUpdaterMock() {
     on: vi.fn(),
     autoDownload: true,
     allowPrerelease: false,
+    // electron-updater turns this on whenever a channel is set
+    allowDowngrade: true,
     channel: undefined as string | undefined,
     logger: undefined as any,
     forceDevUpdateConfig: false,
@@ -146,6 +148,7 @@ describe('setupAutoUpdater', () => {
       url: 'https://github.com/KirbyK64/waifus-redragon/releases/download/v0.9.0-beta.6',
     })
     expect(updaterState.instance.channel).toBe(expectedChannelByArch)
+    expect(updaterState.instance.allowDowngrade).toBe(false)
   })
 
   it('ignores UPDATE_SERVER_URL in non-dev runtime', async () => {

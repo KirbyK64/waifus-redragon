@@ -237,6 +237,7 @@ export interface AppUpdaterLike {
   setFeedURL?: (options: { provider: 'generic', url: string }) => void
   logger?: any
   allowPrerelease?: boolean
+  allowDowngrade?: boolean
   autoDownload?: boolean
   channel?: string
   forceDevUpdateConfig?: boolean
@@ -333,6 +334,9 @@ export function setupAutoUpdater(options: AutoUpdaterOptions = {}): AutoUpdater 
   void cleanupStaleUpdateFiles()
   if (activeFeedUrlOverride)
     autoUpdater.channel = releaseChannelName
+  // Setting a channel turns allowDowngrade on inside electron-updater, and then a build newer than
+  // the last release installs the older one over itself. Only ever move forward.
+  autoUpdater.allowDowngrade = false
   autoUpdater.forceDevUpdateConfig = !!feedUrlOverride && !app.isPackaged
   autoUpdater.logger = {
     info: (message: string) => {
@@ -398,6 +402,7 @@ export function setupAutoUpdater(options: AutoUpdaterOptions = {}): AutoUpdater 
   function applyGenericFeedOverride(url: string, reason: string) {
     activeFeedUrlOverride = url
     autoUpdater.channel = releaseChannelName
+    autoUpdater.allowDowngrade = false
     autoUpdater.setFeedURL?.({ provider: 'generic', url })
     log.warn(`[auto-updater] applied generic feed override (${reason}): ${url}`)
   }
