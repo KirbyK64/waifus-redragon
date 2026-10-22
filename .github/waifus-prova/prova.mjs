@@ -284,6 +284,15 @@ async function abreConversa(browser) {
   return chat
 }
 
+/**
+ * Janela do app que pode virar Configurações sem estragar nada: a do inlay (index.html#/inlay). A da conversa não
+ * serve, porque não volta depois de sair da rota dela.
+ */
+function janelaDeApoio(browser) {
+  return paginas(browser).find(p => p.url().includes('#/inlay'))
+    ?? paginas(browser).find(p => !p.url().includes('synced-leader=true') && !/#\/(?:chat|edge-tab)/.test(p.url()) && p.url().includes('index.html'))
+}
+
 /** Abre a conversa, manda uma pergunta e espera a resposta aparecer. Devolve a janela da conversa. */
 async function conversar(browser) {
   const chat = await abreConversa(browser)
@@ -317,7 +326,7 @@ async function papo(chat, rotulo, perguntas) {
 /** Liga "Esconder na esquerda" nas Configurações e usa a setinha da borda: esconde, mostra, esconde de novo. */
 async function esquerda(browser) {
   // Qualquer janela do app serve pra abrir as Configurações: o liga e desliga vale pra todas.
-  const config = paginas(browser).find(p => /#\/chat/.test(p.url())) ?? paginas(browser).find(p => !p.url().includes('synced-leader=true'))
+  const config = janelaDeApoio(browser)
   if (!config) {
     nota('esquerda: não achei uma janela pra abrir as Configurações')
     return
@@ -363,22 +372,33 @@ async function esquerda(browser) {
  * NOTICE: trocar só o # da janela da conversa de volta pra conversa deixa ela em branco (prova de 22/10 01h16); quem
  * usa abre as Configurações na janela delas. Aqui a janela volta pelo endereço inteiro com que ela abriu.
  */
-async function violet(chat, urlChat) {
-  await chat.evaluate(() => { location.hash = '#/settings/airi-card/redragon-violet' })
-  const botao = chat.getByRole('button', { name: /^Ativar$/ }).first()
-  if (!await botao.waitFor({ timeout: 20000 }).then(() => true, () => false)) {
-    nota('violet: o botão Ativar do cartão dela não apareceu')
-    await chat.screenshot({ path: join(out, '21-cartao-violet-sem-botao.png') }).catch(() => {})
+async function violet(browser, chat) {
+  const cartao = janelaDeApoio(browser)
+  if (!cartao || cartao === chat) {
+    nota('violet: não achei uma janela pra abrir o cartão sem mexer na conversa')
     return
   }
-  await chat.screenshot({ path: join(out, '21-cartao-violet.png') }).catch(() => {})
+  await cartao.setViewportSize({ width: 600, height: 800 }).catch(() => {})
+  await cartao.evaluate(() => { location.hash = '#/settings/airi-card/redragon-violet' })
+  const botao = cartao.getByRole('button', { name: /^Ativar$/ }).first()
+  if (!await botao.waitFor({ timeout: 20000 }).then(() => true, () => false)) {
+    nota('violet: o botão Ativar do cartão dela não apareceu')
+    await cartao.screenshot({ path: join(out, '21-cartao-violet-sem-botao.png') }).catch(() => {})
+    return
+  }
+  await cartao.screenshot({ path: join(out, '21-cartao-violet.png') }).catch(() => {})
   const t0 = Date.now()
   await botao.click()
   await espera(15000)
   nota(`violet: ativei pelo cartão; ${((Date.now() - t0) / 1000).toFixed(0)} s depois a foto da área de trabalho`)
   tela('22-violet-na-area-de-trabalho.png')
-  await chat.goto(urlChat, { waitUntil: 'load' })
-  await chat.waitForSelector('textarea', { timeout: 20000 })
+  // NOTICE: a janela da conversa não aguenta recarregar (fica branca, com hash ou com goto); por isso o cartão
+  // abre em outra janela e a conversa segue intacta, como na pessoa que troca pelas Configurações.
+  if (!await chat.waitForSelector('textarea', { timeout: 20000 }).then(() => true, () => false)) {
+    nota('violet: a conversa sumiu depois da troca')
+    await chat.screenshot({ path: join(out, '23-violet-sem-conversa.png') }).catch(() => {})
+    return
+  }
   await espera(2000)
   nota(`violet: topo da conversa depois da troca: ${(await chat.evaluate(() => document.body.innerText).catch(() => '')).replace(/\s+/g, ' ').slice(0, 160)}`)
   await papo(chat, 'violet', [
@@ -615,7 +635,7 @@ async function main() {
   }
   await esquerda(browser).catch(e => nota(`esquerda: erro ${e.message.split('\n')[0]}`))
   if (chat) {
-    await violet(chat, urlChat).catch(e => nota(`violet: erro ${e.message.split('\n')[0]}`))
+    await violet(browser, chat).catch(e => nota(`violet: erro ${e.message.split('\n')[0]}`))
     await passeioConfig(chat).catch(e => nota(`config: erro ${e.message.split('\n')[0]}`))
     await chat.goto(urlChat, { waitUntil: 'load' }).catch(() => {})
   }
