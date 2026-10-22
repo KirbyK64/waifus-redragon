@@ -129,7 +129,7 @@ export default {
     name: 'waifus-redragon',
     productName: 'Waifus Redragon',
     // The Waifus version, the one on the release and on the page. The package keeps the AIRI version it came from.
-    version: '0.3.1',
+    version: '0.3.2',
     main: 'out/main/index.js',
     homepage: 'https://pm.solidpower.com.br/waifus-redragon/',
     repository: 'https://github.com/KirbyK64/waifus-redragon',

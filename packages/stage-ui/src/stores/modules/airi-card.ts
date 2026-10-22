@@ -44,7 +44,7 @@ import { useFeatureFlagsStore } from '../feature-flags'
 import { useProviderConfigStore } from '../providers/config'
 import { useProviderStore } from '../providers/provider'
 import { useSettingsStageModel } from '../settings/stage-model'
-import { REDRAGON_VIOLET_CARD_ID, redragonCard } from './airi-card-redragon'
+import { REDRAGON_VIOLET_CARD_ID, redragonCard, refreshedRedragonCard } from './airi-card-redragon'
 import { useArtistryStore } from './artistry'
 import { useConsciousnessStore } from './consciousness'
 import { configureAsDefaultsIfEmpty, unconfigureAuthenticationProviders } from './default'
@@ -1158,6 +1158,14 @@ export const useAiriCardStore = defineStore('airi-card', () => {
       cards.value.set('default', structuredClone(toRaw(builtInCard.value)))
     if (!cards.value.has(REDRAGON_VIOLET_CARD_ID))
       cards.value.set(REDRAGON_VIOLET_CARD_ID, newAiriCard(redragonCard('violet')))
+    // Stored cards are never rebuilt, so an install keeps the personality it first
+    // saved. Unedited Redragon cards take the current one; voice and model stay.
+    for (const [id, character] of [['default', 'ruby'], [REDRAGON_VIOLET_CARD_ID, 'violet']] as const) {
+      const stored = cards.value.get(id)
+      const refreshed = stored && refreshedRedragonCard(character, toRaw(stored))
+      if (refreshed)
+        cards.value.set(id, refreshed)
+    }
 
     // Stored speech-noop can mean an intentional mute. Only the editor may
     // replace it with inheritance; the old placeholder has no provenance marker.
